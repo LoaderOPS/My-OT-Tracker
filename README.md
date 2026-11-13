@@ -92,3 +92,12 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - Service worker uses network-first navigation (2.2 second timeout) with offline fallback.
 - On the installed app: close it fully and reopen after deploy. If v16 still does not show, open GitHub Pages in Chrome and refresh once; do not clear site storage or uninstall.
 - Existing IndexedDB records and overtime calculations are unchanged. Export your JSON backup before upgrading.
+
+
+## v17 — Comfort + security
+- Theme: Light, Dark, System (Settings → Appearance). Stored independently of payroll data.
+- Large portrait typography and higher contrast.
+- Weekend audit: shows records inconsistent with Sunday and afternoon-rotation Saturday rules, without changing records.
+- Optional Firebase Google cloud snapshot backup when configured. **Not enabled by default.** See `SETUP_FIREBASE.md`.
+- First cloud connection checks for an existing remote backup; no automatic overwrite or restore. This is NOT multi-device live sync.
+- Always export JSON before update. No IndexedDB schema migration required; original DB name and `state` key are preserved.
