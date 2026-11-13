@@ -70,3 +70,12 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - Larger mobile typography throughout main, history and inputs.
 - Back up local IndexedDB data before updating; do not uninstall or clear app data.
 - Legal basis: https://jdih.kemenkeu.go.id/api/download/e47c3fc4-a912-4bf1-bcad-335fee3f71f8/2023pp058.pdf and https://jdih.kemenkeu.go.id/api/download/e60a82e0-b218-40f5-9d18-b924aa1e11ce/2023pmkeuangan168.pdf
+
+
+## v14 Portrait readability
+- Enlarged phone typography across overtime form, dashboard, payroll table, history, and bottom navigation.
+- Bigger tap targets; keeps 2-column form on normal phones and switches to one column on narrow devices.
+- Auto-changing motivation remains; redundant arrow hidden on phone.
+- No changes to overtime, payroll, or local data format.
+- Existing app data is local: export JSON backup before updating; do not uninstall or clear site data.
+- Service worker cache version bumped to load new CSS on update.
