@@ -1,0 +1,48 @@
+export const DEFAULTS={salary:5730100,hourly:33121,weekday:[1.5,2],rest:[2,3,4],restThreshold:7,rotationStart:'2026-11-16',firstShift:'P',restDays:[0],reminderTime:'20:30',reminderEnabled:false};
+export const DAY_TYPES={work:'Hari kerja',scheduled:'Hari kerja tambahan',rest:'Hari istirahat',holiday:'Libur nasional'};
+export const SHIFTS={P:'Pagi · 08:00–16:00',S:'Sore · 16:00–00:00',OFF:'Libur'};
+export const money=n=>new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',minimumFractionDigits:0,maximumFractionDigits:2}).format(n);
+export function dateKey(date){return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`}
+export const localDate=key=>new Date(`${key}T12:00:00`);
+export function addDays(key,n){const d=localDate(key);d.setDate(d.getDate()+n);return dateKey(d)}
+export function dayDifference(a,b){return Math.round((Date.UTC(...a.split('-').map((v,i)=>i===1?Number(v)-1:Number(v)))-Date.UTC(...b.split('-').map((v,i)=>i===1?Number(v)-1:Number(v))))/86400000)}
+export function rotationShift(date,settings){
+  const weeks=Math.floor(dayDifference(date,settings.rotationStart)/7);
+  return Math.abs(weeks)%2===0?settings.firstShift:(settings.firstShift==='P'?'S':'P')
+}
+export function isAfternoonSaturday(date,settings){
+  return localDate(date).getDay()===6&&rotationShift(date,settings)==='S'
+}
+export function isMandatoryRestDate(date,settings){
+  return localDate(date).getDay()===0||isAfternoonSaturday(date,settings)
+}
+export function shiftFor(date,settings,roster={}){
+  if(roster[date]?.shift)return roster[date].shift;
+  if(isMandatoryRestDate(date,settings))return 'OFF';
+  if(settings.restDays?.includes(localDate(date).getDay()))return 'OFF';
+  return rotationShift(date,settings)
+}
+export function dayTypeFor(date,settings,roster={},holidays={}){
+  if(holidays[date]||roster[date]?.dayType==='holiday')return 'holiday';
+  // Every Sunday and Saturday during an afternoon rotation are fixed rest days.
+  // An official roster indicating work does not change the overtime category.
+  if(isMandatoryRestDate(date,settings))return 'rest';
+  if(roster[date]?.dayType)return roster[date].dayType;
+  if(roster[date]?.shift==='OFF')return 'rest';
+  if(settings.restDays?.includes(localDate(date).getDay())&&!roster[date]?.shift)return 'rest';
+  return 'work'
+}
+export function parseLocal(date,time,offset=0){if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!/^([01]\d|2[0-3]):[0-5]\d$/.test(time))throw Error('Tanggal atau jam tidak valid');const [h,m]=time.split(':').map(Number);const d=localDate(addDays(date,offset));d.setHours(h,m,0,0);return d.getTime()}
+export function overlap(a,b,c,d){return Math.max(0,Math.min(b,d)-Math.max(a,c))}
+export function standardBreakWindows(workDate,shift){const ans=[];if(shift==='P')ans.push([parseLocal(workDate,'18:00'),parseLocal(workDate,'19:00')]);if(shift==='S'){ans.push([parseLocal(workDate,'12:00'),parseLocal(workDate,'13:00')]);ans.push([parseLocal(workDate,'00:00',1),parseLocal(workDate,'01:00',1)])}return ans}
+export function calculate(record,settings){const intervals=record.intervals||[];let segments=[];for(const it of intervals){const start=parseLocal(record.date,it.start,it.startOffset||0),end=parseLocal(record.date,it.end,it.endOffset||0);if(end<=start)throw Error('Jam selesai harus setelah jam mulai; gunakan +1 hari jika melewati tengah malam');if(end-start>36*3600000)throw Error('Satu interval tidak boleh lebih dari 36 jam');segments.push([start,end])}
+segments.sort((a,b)=>a[0]-b[0]);for(let i=1;i<segments.length;i++)if(segments[i][0]<segments[i-1][1])throw Error('Interval lembur saling tumpang tindih');
+const gross=segments.reduce((s,[a,b])=>s+(b-a)/60000,0);let breakDeduct=0;const breaks=[];for(const [a,b] of standardBreakWindows(record.date,record.shift)){const mins=segments.reduce((sum,[x,y])=>sum+overlap(x,y,a,b)/60000,0);if(mins>0){breakDeduct+=mins;breaks.push({label:`${new Date(a).getHours().toString().padStart(2,'0')}:00–${new Date(b).getHours().toString().padStart(2,'0')}:00`,minutes:mins})}}
+const manual=Number(record.manualBreak||0);if(!Number.isFinite(manual)||manual<0)throw Error('Koreksi istirahat tidak valid');const totalBreak=Math.min(gross,Math.max(0,breakDeduct+manual));const net=Math.max(0,gross-totalBreak)/60;
+const rate=Number(record.rateSnapshot??settings.hourly);if(!Number.isFinite(rate)||rate<0)throw Error('Tarif tidak valid');const type=record.dayType||'work';const multipliers=record.ruleSnapshot||{weekday:settings.weekday,rest:settings.rest,restThreshold:settings.restThreshold};const [first,sub]=multipliers.weekday;const [restA,restB,restC]=multipliers.rest;const threshold=Number(multipliers.restThreshold);const bands=[];let remaining=net;const band=(limit,m,label)=>{const qty=Math.min(remaining,limit);if(qty>1e-9){bands.push({label,hours:qty,multiplier:Number(m),amount:qty*Number(m)*rate});remaining-=qty}};
+if(type==='work'||type==='scheduled'){band(1,first,'Jam pertama');band(Infinity,sub,'Jam berikutnya')}else{band(threshold,restA,`Jam 1–${threshold}`);band(1,restB,`Jam ${threshold+1}`);band(Infinity,restC,`Jam ${threshold+2} dst.`)}
+return {gross:gross/60,automaticBreak:breakDeduct/60,manualBreak:manual/60,breakHours:totalBreak/60,net,rate,dayType:type,breaks,bands,amount:bands.reduce((s,b)=>s+b.amount,0)} }
+export function normalizeShift(v){const a=String(v??'').trim().toUpperCase();if(['P','PAGI','1','SHIFT 1','SHIFT PAGI','MORNING','08:00-16:00','08.00-16.00'].includes(a))return'P';if(['S','SORE','2','SHIFT 2','SHIFT SORE','AFTERNOON','16:00-00:00','16.00-00.00','16:00-24:00','16.00-24.00'].includes(a))return'S';if(['OFF','LIBUR','L','X','REST','HOLIDAY','CUTI','-'].includes(a))return'OFF';return null}
+export function parseCSV(text){let out=[],row=[],v='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){v+='"';i++}else quoted=!quoted}else if(!quoted&&(',;\t'.includes(c))){row.push(v);v=''}else if(!quoted&&(c==='\n'||c==='\r')){if(c==='\r'&&text[i+1]==='\n')i++;row.push(v);if(row.some(x=>x.trim()))out.push(row);row=[];v=''}else v+=c}row.push(v);if(row.some(x=>x.trim()))out.push(row);return out}
+export function parseDate(v){if(typeof v==='number'&&v>30000&&v<100000)return new Date(Date.UTC(1899,11,30)+v*86400000).toISOString().slice(0,10);let s=String(v??'').trim();if(/^\d{4}-\d\d-\d\d$/.test(s)){if(dateKey(localDate(s))===s)return s;return null}let m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);if(!m)return null;const d=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;return dateKey(localDate(d))===d?d:null}
+export function parseRoster(rows){const headers=(rows[0]||[]).map(x=>String(x).trim().toLowerCase());const di=headers.findIndex(s=>/^(date|tanggal|tgl)$/.test(s));const si=headers.findIndex(s=>/^(shift|jadwal|roster|kode shift)$/.test(s));const ti=headers.findIndex(s=>/^(tipe hari|day.type|kategori hari|day_type)$/.test(s));if(di<0||si<0)throw Error('Format roster harus punya kolom Tanggal dan Shift.');const data={},errors=[];for(let k=1;k<rows.length;k++){const r=rows[k];if(!r.some(x=>String(x).trim()))continue;const d=parseDate(r[di]),s=normalizeShift(r[si]);if(!d||!s||data[d]){errors.push(k+1);continue}let dayType=ti>=0?String(r[ti]).toLowerCase().trim():'';dayType=({'kerja':'work','work':'work','tambahan':'scheduled','scheduled':'scheduled','istirahat':'rest','rest':'rest','libur':'holiday','holiday':'holiday'})[dayType]||undefined;data[d]={shift:s,...(dayType?{dayType}:{}),source:'import'} }if(errors.length)throw Error('Data tidak valid/duplikat pada baris: '+errors.slice(0,12).join(', '));if(!Object.keys(data).length)throw Error('Roster kosong');return data}
