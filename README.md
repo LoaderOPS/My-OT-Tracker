@@ -79,3 +79,9 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - No changes to overtime, payroll, or local data format.
 - Existing app data is local: export JSON backup before updating; do not uninstall or clear site data.
 - Service worker cache version bumped to load new CSS on update.
+
+## v15 Android portrait readability
+- Extends large-text rules to Android PWA viewports up to 1100 CSS pixels (coarse pointer, portrait) and screen widths <=900.
+- Larger earnings, payroll breakdown, chart, form, and bottom-navigation text.
+- No data model, calculations or settings changed.
+- Back up JSON before replacing GitHub files; do not uninstall PWA or clear storage.

@@ -140,8 +140,8 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .cutoff-picker input{max-width:190px;min-width:0;background:#fff;color:#102a52}
 
 
-/* v14 — Portrait-first readable Android interface */
-@media screen and (max-width:700px) {
+/* v15 — Broaden phone rules for Android PWAs reporting large CSS viewports */
+@media screen and (max-width:900px), screen and (pointer:coarse) and (orientation:portrait) and (max-width:1100px) {
   :root {font-size:18px}
   body {font-size:17px;line-height:1.5;padding-bottom:calc(88px + env(safe-area-inset-bottom))}
   main {width:100%;max-width:none;padding:16px 12px 28px}
@@ -219,4 +219,47 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
  .interval .two {grid-template-columns:1fr}
  .hero .large {font-size:34px!important}
  .line span {max-width:55%}
+}
+
+/* v15: readable typography in Android PWA, including enlarged CSS viewport */
+@media screen and (max-width:900px), screen and (pointer:coarse) and (orientation:portrait) and (max-width:1100px) {
+  :root {font-size:19px!important}
+  body {font-size:18px!important;line-height:1.55!important}
+  header h1 {font-size:26px!important}
+  header small,.status {font-size:14px!important}
+  .eyebrow {font-size:17px!important}
+  h2 {font-size:24px!important}
+  h3 {font-size:21px!important}
+  .muted,.hint,.sessionNote {font-size:16px!important;line-height:1.55}
+  .motivation-top {font-size:14px!important;letter-spacing:.3px!important}
+  .motivation-quote {font-size:clamp(24px,5vw,30px)!important}
+  .motivation-note {font-size:17px!important}
+  .motivation-autoplay {font-size:15px!important}
+  .hero small,.hero .muted {font-size:17px!important}
+  .hero .large {font-size:clamp(37px,8.5vw,51px)!important}
+  .cutoff-picker,.cutoff-picker label {font-size:17px!important}
+  .metrics span {font-size:17px!important}
+  .metrics strong {font-size:clamp(25px,6vw,35px)!important}
+  .line {font-size:17px!important;min-height:48px!important;gap:12px!important}
+  .line span,.line b {font-size:16px!important;line-height:1.45}
+  .payroll-summary .muted {font-size:15px!important}
+  .payroll-takehome span {font-size:18px!important}
+  .payroll-takehome strong {font-size:clamp(33px,7vw,44px)!important}
+  .chart {min-height:175px!important}
+  .barWrap,.barWrap small {font-size:14px!important}
+  .itemhead strong,.itemhead b {font-size:18px!important}
+  .item .muted,.item small {font-size:16px!important}
+  .shiftbox {font-size:19px!important}
+  .day {font-size:16px!important}
+  .day small {font-size:12px!important}
+  label {font-size:17px!important}
+  input,select,textarea {font-size:18px!important;min-height:54px!important}
+  input[type=checkbox] {min-height:0!important}
+  button,.filebtn {font-size:17px!important;min-height:48px}
+  .interval label {font-size:16px!important}
+  .interval input,.interval select {font-size:17px!important}
+  .breakdown .line {min-height:42px!important}
+  .breakdown .total {font-size:34px!important}
+  nav button {font-size:27px!important}
+  nav button span {font-size:15px!important}
 }

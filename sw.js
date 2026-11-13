@@ -1,4 +1,4 @@
-const CACHE='my-ot-tracker-v14-portrait-readable';
+const CACHE='my-ot-tracker-v15-phone-text';
 const ASSETS=['./','./index.html','./app.mjs','./core.mjs','./style.css','./manifest.webmanifest','./icon.svg','./contoh-roster.csv'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('my-ot-tracker-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
