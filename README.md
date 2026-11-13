@@ -58,3 +58,15 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - Reinstalling or clearing browser data is NOT needed. Back up records first, then upload all v12 files to the same GitHub Pages repository.
 - On Android Chrome, disable **Desktop site** for the app URL if enabled. The layout responds to actual viewport size.
 - All payroll calculations, shift rules, and stored database remain unchanged.
+
+
+## v13 Payroll / mobile readability
+- Payroll cutoff is the 16th through 15th, keyed by the month in which it ends. Dashboard and report now use this cutoff, rather than calendar months. Existing overtime records remain unchanged.
+- Salary reference defaults to Rp5,730,100; employee JHT 2% and JPN 1%, both assumed calculated from salary (not overtime).
+- Tax status TK/0, TER Category A according to PP 58/2023; PPh 21 applied to taxable gross (salary + overtime + optionally other taxable income) **before** JHT/JPN employee contributions. Full A rate schedule through 34% is included.
+- Any employer-paid taxable benefit, non-salary payroll item or altered contribution base must be handled by comparing to actual payslip; TER is an estimate.
+- December/last tax period must be reconciled annually under PMK 168/2023. Manual PPh 21 override is provided for payslip alignment, stored for the dashboard-selected payroll period only.
+- Payroll cutoff date is separate from actual tax period/payment; the exact payroll-to-tax mapping depends on employer payout dates.
+- Larger mobile typography throughout main, history and inputs.
+- Back up local IndexedDB data before updating; do not uninstall or clear app data.
+- Legal basis: https://jdih.kemenkeu.go.id/api/download/e47c3fc4-a912-4bf1-bcad-335fee3f71f8/2023pp058.pdf and https://jdih.kemenkeu.go.id/api/download/e60a82e0-b218-40f5-9d18-b924aa1e11ce/2023pmkeuangan168.pdf

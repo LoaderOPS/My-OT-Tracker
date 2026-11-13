@@ -1,4 +1,4 @@
-export const DEFAULTS={salary:5730100,hourly:33121,weekday:[1.5,2],rest:[2,3,4],restThreshold:7,rotationStart:'2026-11-16',firstShift:'P',restDays:[0],reminderTime:'20:30',reminderEnabled:false};
+export const DEFAULTS={salary:5730100,hourly:33121,weekday:[1.5,2],rest:[2,3,4],restThreshold:7,rotationStart:'2026-11-16',firstShift:'P',restDays:[0],reminderTime:'20:30',reminderEnabled:false,jhtPercent:2,jpnPercent:1,ptkp:'TK/0',extraTaxableIncome:0,pphOverrides:{}};
 export const DAY_TYPES={work:'Workday',scheduled:'Extra workday',rest:'Weekly rest day',holiday:'Public holiday'};
 export const SHIFTS={P:'Morning · 08:00–16:00',S:'Afternoon · 16:00–00:00',OFF:'Off'};
 export const money=n=>new Intl.NumberFormat('en-US',{style:'currency',currency:'IDR',minimumFractionDigits:0,maximumFractionDigits:2}).format(n);
@@ -52,3 +52,48 @@ export function normalizeShift(v){const a=String(v??'').trim().toUpperCase();if(
 export function parseCSV(text){let out=[],row=[],v='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){v+='"';i++}else quoted=!quoted}else if(!quoted&&(',;\t'.includes(c))){row.push(v);v=''}else if(!quoted&&(c==='\n'||c==='\r')){if(c==='\r'&&text[i+1]==='\n')i++;row.push(v);if(row.some(x=>x.trim()))out.push(row);row=[];v=''}else v+=c}row.push(v);if(row.some(x=>x.trim()))out.push(row);return out}
 export function parseDate(v){if(typeof v==='number'&&v>30000&&v<100000)return new Date(Date.UTC(1899,11,30)+v*86400000).toISOString().slice(0,10);let s=String(v??'').trim();if(/^\d{4}-\d\d-\d\d$/.test(s)){if(dateKey(localDate(s))===s)return s;return null}let m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);if(!m)return null;const d=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;return dateKey(localDate(d))===d?d:null}
 export function parseRoster(rows){const headers=(rows[0]||[]).map(x=>String(x).trim().toLowerCase());const di=headers.findIndex(s=>/^(date|tanggal|tgl)$/.test(s));const si=headers.findIndex(s=>/^(shift|jadwal|roster|kode shift)$/.test(s));const ti=headers.findIndex(s=>/^(tipe hari|day.type|kategori hari|day_type)$/.test(s));if(di<0||si<0)throw Error('Roster must include Date and Shift columns.');const data={},errors=[];for(let k=1;k<rows.length;k++){const r=rows[k];if(!r.some(x=>String(x).trim()))continue;const d=parseDate(r[di]),s=normalizeShift(r[si]);if(!d||!s||data[d]){errors.push(k+1);continue}let dayType=ti>=0?String(r[ti]).toLowerCase().trim():'';dayType=({'kerja':'work','work':'work','tambahan':'scheduled','scheduled':'scheduled','istirahat':'rest','rest':'rest','libur':'holiday','holiday':'holiday'})[dayType]||undefined;data[d]={shift:s,...(dayType?{dayType}:{}),source:'import'} }if(errors.length)throw Error('Invalid or duplicate data at rows: '+errors.slice(0,12).join(', '));if(!Object.keys(data).length)throw Error('Roster is empty');return data}
+
+// Official PP 58/2023 — monthly effective withholding rates, category A (TK/0, TK/1, K/0).
+// Each entry is an inclusive upper bound and its rate; last is Infinity.
+export const TER_A = [
+[5400000,0],[5650000,.0025],[5950000,.005],[6300000,.0075],[6750000,.01],
+[7500000,.0125],[8550000,.015],[9650000,.0175],[10050000,.02],
+[10350000,.0225],[10700000,.025],[11050000,.03],[11600000,.035],
+[12500000,.04],[13750000,.05],[15100000,.06],[16950000,.07],
+[19750000,.08],[24150000,.09],[26450000,.10],[28000000,.11],
+[30050000,.12],[32400000,.13],[35400000,.14],[39100000,.15],
+[43850000,.16],[47800000,.17],[51400000,.18],[56300000,.19],
+[62200000,.20],[68600000,.21],[77500000,.22],[89000000,.23],
+[103000000,.24],[125000000,.25],[157000000,.26],[206000000,.27],
+[337000000,.28],[454000000,.29],[550000000,.30],[695000000,.31],
+[910000000,.32],[1400000000,.33],[Infinity,.34]
+];
+export function terCategoryARate(gross){
+ if(!Number.isFinite(gross)||gross<0)throw Error('Invalid taxable gross');
+ return TER_A.find(([upper])=>gross<=upper)[1];
+}
+// periodKey is the month in which the cutoff ENDS (e.g. 2026-12 => 2026-11-16…2026-12-15).
+export function payrollPeriodForDate(date){
+ const [y,m,d]=date.split('-').map(Number);
+ if(d<=15)return `${y}-${String(m).padStart(2,'0')}`;
+ return `${m===12?y+1:y}-${String(m===12?1:m+1).padStart(2,'0')}`;
+}
+export function payrollRange(periodKey){
+ const [year,month]=periodKey.split('-').map(Number);
+ const y=month===1?year-1:year,m=month===1?12:month-1;
+ return {start:`${y}-${String(m).padStart(2,'0')}-16`,end:`${year}-${String(month).padStart(2,'0')}-15`};
+}
+export function computePayroll(settings, overtimeAmount, {manualPph=null}={}){
+ const salary=Number(settings.salary||0), overtime=Number(overtimeAmount||0);
+ const gross=salary+overtime;
+ const extraTaxable=Number(settings.extraTaxableIncome||0);
+ const taxableGross=gross+extraTaxable;
+ const jht= Math.round(salary*Number(settings.jhtPercent??2)/100);
+ const jpn= Math.round(salary*Number(settings.jpnPercent??1)/100);
+ const terRate=terCategoryARate(taxableGross);
+ const terEstimated=Math.round(taxableGross*terRate);
+ const override=manualPph===null||manualPph===''?null:Number(manualPph);
+ if(override!==null&&(!Number.isFinite(override)||override<0))throw Error('Invalid PPh 21 override');
+ const pph21=override??terEstimated;
+ return {salary,overtime,gross,extraTaxable,taxableGross,jht,jpn,terRate,terEstimated,pph21,totalDeductions:jht+jpn+pph21,takeHome:gross-jht-jpn-pph21,isManual:override!==null};
+}

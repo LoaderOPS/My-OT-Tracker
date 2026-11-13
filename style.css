@@ -113,3 +113,28 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   main{max-width:100%;width:100%;margin-inline:0}
   nav{max-width:100%!important;width:100%}
 }
+
+/* v13 Android readability: use real 14–18px body copy, not tiny desktop labels */
+@media screen and (max-width:700px){
+ :root{font-size:17px}
+ header h1{font-size:23px}header small{font-size:12px}.status{font-size:12px}
+ .eyebrow{font-size:15px} h2{font-size:22px}h3{font-size:18px}
+ .muted,.hint{font-size:14px;line-height:1.55}
+ .motivation-top{font-size:12px}.motivation-note,.motivation-autoplay{font-size:14px}
+ .motivation-quote{font-size:clamp(21px,5.8vw,26px)}
+ .hero small{font-size:15px}.hero .large{font-size:clamp(33px,9.2vw,44px)}
+ .metrics span{font-size:14px;line-height:1.4}.metrics strong{font-size:clamp(20px,6vw,27px)}
+ .line{font-size:14px;line-height:1.4}.line span{min-width:0}.line b{max-width:54%;text-align:right;overflow-wrap:anywhere}
+ .itemhead strong{font-size:15px}.item .muted{font-size:14px}.itembuttons button{font-size:14px}
+ .barWrap{font-size:12px}.legend{font-size:13px}.weekdays{font-size:12px}
+ nav button span{font-size:13px!important;font-weight:650}
+ label{font-size:15px!important} input,select,textarea{font-size:16px}
+ .interval label{font-size:14px!important}.sessionNote{font-size:14px}
+ .payroll-summary{padding:16px}.payroll-takehome strong{font-size:clamp(24px,7vw,32px)}
+}
+.payroll-summary h2{margin-bottom:9px}
+.payroll-takehome{background:#e7f2ff;border-radius:13px;padding:15px;margin-top:14px;color:#103b6f;display:flex;flex-direction:column;gap:6px}
+.payroll-takehome span{font-size:15px;font-weight:700}
+.payroll-takehome strong{font-size:29px;overflow-wrap:anywhere}
+.cutoff-picker{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:white;font-size:13px;max-width:100%;margin-top:12px}
+.cutoff-picker input{max-width:190px;min-width:0;background:#fff;color:#102a52}
