@@ -263,3 +263,25 @@ body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   nav button {font-size:27px!important}
   nav button span {font-size:15px!important}
 }
+
+/* v16 deliberate mobile comfort readability, always visible on Android phones */
+@media screen and (max-width:1200px) {
+ :root,body{font-size:19px!important;line-height:1.5!important}
+ header h1{font-size:24px!important} header small,.status{font-size:13px!important}
+ article{padding:18px 16px!important}
+ h2{font-size:23px!important}h3{font-size:20px!important}
+ .eyebrow,.hint,.muted{font-size:16px!important}
+ .motivation-top{font-size:13px!important} .motivation-quote{font-size:26px!important;line-height:1.32!important}
+ .motivation-note,.motivation-autoplay{font-size:15px!important}
+ .hero small{font-size:17px!important} .hero .large{font-size:42px!important}
+ .cutoff-picker{font-size:16px!important}
+ .line,.line span,.line b{font-size:17px!important;line-height:1.4!important}
+ .metrics span{font-size:16px!important}.metrics strong{font-size:29px!important}
+ .itemhead strong,.itemhead b{font-size:18px!important}.item .muted,.item small{font-size:16px!important}
+ label{font-size:17px!important}input,select,textarea{font-size:18px!important;min-height:50px!important}
+ input[type=checkbox]{min-height:initial!important}button{font-size:17px!important;min-height:44px}
+ .barWrap,.barWrap small{font-size:13px!important}
+ nav button span{font-size:14px!important}.weekdays,.legend{font-size:13px!important}
+ .payroll-takehome strong{font-size:36px!important}
+}
+#buildVersion{font-size:12px!important;color:#bfe3ff;font-weight:700;letter-spacing:.4px;margin-left:8px}

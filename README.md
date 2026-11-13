@@ -85,3 +85,10 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - Larger earnings, payroll breakdown, chart, form, and bottom-navigation text.
 - No data model, calculations or settings changed.
 - Back up JSON before replacing GitHub files; do not uninstall PWA or clear storage.
+
+## v16 – diagnosing unchanged mobile typography
+- The header now shows `v16` next to My OT Tracker. If missing, the phone is using an older cached HTML document.
+- `style-v16.css` has a new filename to bypass previously cached stylesheet.
+- Service worker uses network-first navigation (2.2 second timeout) with offline fallback.
+- On the installed app: close it fully and reopen after deploy. If v16 still does not show, open GitHub Pages in Chrome and refresh once; do not clear site storage or uninstall.
+- Existing IndexedDB records and overtime calculations are unchanged. Export your JSON backup before upgrading.

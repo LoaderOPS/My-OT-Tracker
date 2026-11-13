@@ -1,28 +1,28 @@
-const CACHE='my-ot-tracker-v15-phone-text';
-const ASSETS=['./','./index.html','./app.mjs','./core.mjs','./style.css','./manifest.webmanifest','./icon.svg','./contoh-roster.csv'];
-self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('my-ot-tracker-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{
- if(e.request.method!=='GET'||new URL(e.request.url).origin!==self.location.origin)return;
- const url=new URL(e.request.url);
- const staticAsset=ASSETS.slice(1).some(path=>url.pathname.endsWith(path.slice(2)));
- if(staticAsset){
-  e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(cached=>cached||fetch(e.request).then(response=>{
-   if(response.ok){const copy=response.clone();caches.open(CACHE).then(c=>c.put(e.request,copy));}return response;
-  })));
-  return;
+const CACHE='my-ot-tracker-v16';
+const ASSETS=['./','./index.html','./app.mjs','./core.mjs','./style-v16.css','./manifest.webmanifest','./icon.svg','./contoh-roster.csv'];
+self.addEventListener('install',event=>event.waitUntil((async()=>{
+ const c=await caches.open(CACHE);
+ await Promise.all(ASSETS.map(async url=>{try{const r=await fetch(new Request(url,{cache:'reload'}));if(r.ok)await c.put(url,r)}catch{}}));
+ await self.skipWaiting();
+})()));
+self.addEventListener('activate',event=>event.waitUntil((async()=>{
+ const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('my-ot-tracker-')&&k!==CACHE).map(k=>caches.delete(k)));await self.clients.claim();
+})()));
+self.addEventListener('fetch',event=>{
+ const req=event.request; const url=new URL(req.url);
+ if(req.method!=='GET'||url.origin!==self.location.origin)return;
+ if(req.mode==='navigate'){
+  event.respondWith((async()=>{
+   const cache=await caches.open(CACHE);
+   try{const response=await Promise.race([fetch(new Request(req,{cache:'no-store'})),new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),2200))]);
+    if(response.ok){event.waitUntil(cache.put('./',response.clone()));return response}
+   }catch{}
+   return await cache.match('./')||await cache.match('./index.html')||Response.error();
+  })());return;
  }
- // Installed app: open the cached shell immediately instead of waiting on a slow network.
- if(e.request.mode==='navigate'){
-  e.respondWith((async()=>{
-   const cached=await caches.match('./');
-   if(cached) return cached;
-   try{
-    const response=await fetch(e.request);
-    if(response.ok){const copy=response.clone();e.waitUntil(caches.open(CACHE).then(c=>c.put('./',copy)));}
-    return response;
-   }catch{return Response.error();}
-  })());
- }
-
+ event.respondWith((async()=>{
+  const cache=await caches.open(CACHE);
+  try{const network=await fetch(new Request(req,{cache:'no-cache'}));if(network.ok){event.waitUntil(cache.put(req,network.clone()));return network}}catch{}
+  return await caches.match(req,{ignoreSearch:true})||Response.error();
+ })());
 });
