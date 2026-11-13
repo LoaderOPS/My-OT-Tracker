@@ -190,7 +190,7 @@ function showMotivation(index){
  document.getElementById('motivationQuote').textContent=m.quote;
  document.getElementById('motivationNote').textContent=m.note;
  document.getElementById('motivationCounter').textContent=String(motivationIndex+1).padStart(2,'0')+' / '+String(MOTIVATIONS.length).padStart(2,'0');
- document.querySelectorAll('.motivation-dot').forEach((el,i)=>{el.classList.toggle('active',i===motivationIndex);el.setAttribute('aria-current',i===motivationIndex?'true':'false');});
+ // No pagination dots or expensive DOM work on every quote change.
 }
 function initMotivation(){
  const dots=document.getElementById('motivationDots');
@@ -217,7 +217,16 @@ function renderCalendar(){const m=$('calendarMonth').value||month;const [year,mo
 function renderSelectedDay(){const sh=shift(selectedDate),type=daytype(selectedDate),rr=state.records.filter(r=>r.date===selectedDate);$('selectedDay').innerHTML=`<h3>${selectedDate}</h3><p><b>${escape(SHIFTS[sh])}</b> · ${escape(DAY_TYPES[type])}</p><p class="muted">${rr.length?rr.length+' overtime entries':'No entry yet (does not necessarily mean overtime was worked)'}</p>${rr.map(r=>htmlEntry(r,false)).join('')}<div class="two"><label>Change shift<select id="overrideShift"><option value="P" ${sh==='P'?'selected':''}>Morning</option><option value="S" ${sh==='S'?'selected':''}>Afternoon</option><option value="OFF" ${sh==='OFF'?'selected':''}>Off</option></select></label><label>Category<select id="overrideType">${Object.entries(DAY_TYPES).map(([k,v])=>`<option value="${k}" ${type===k?'selected':''}>${v}</option>`).join('')}</select></label></div><div class="actions"><button id="saveOverride">Save schedule</button><button id="addSelected" class="primary">Add overtime for this date</button></div>`}
 function renderHistory(){const m=$('reportMonth').value||month,q=$('historySearch').value.trim().toLowerCase(),filter=$('historyFilter').value;const all=state.records.filter(r=>r.date.startsWith(m)),rows=all.filter(r=>(filter==='all'||calc(r).dayType===filter)&&[r.date,r.notes||'',SHIFTS[r.shift]].join(' ').toLowerCase().includes(q));const s=stats(all);let totalDays=0;const y=+m.slice(0,4),mm=+m.slice(5,7);for(let d=1;d<=new Date(y,mm,0).getDate();d++){const k=`${m}-${String(d).padStart(2,'0')}`;if(daytype(k)==='work'||daytype(k)==='scheduled')totalDays++}const lines=[['Monthly salary reference',money(state.settings.salary)],['Fixed hourly overtime rate',money(state.settings.hourly)],['Scheduled workdays',totalDays+' hari'],['Days with overtime entries',s.days+' hari'],['Workday overtime',fmt(s.weekdayHours)+' hours'],['Rest-day overtime',fmt(s.restHours)+' hours'],['Public holiday overtime',fmt(s.holidayHours)+' hours'],['Total gross',fmt(s.gross)+' hours'],['Total breaks',fmt(s.breaks)+' hours'],['Total net',fmt(s.h)+' hours'],['Estimated earnings',money(s.amount)]];$('reportTotals').innerHTML='<h3>Summary '+escape(m)+'</h3>'+lines.map(([k,v])=>`<div class="line"><span>${escape(k)}</span><b>${escape(v)}</b></div>`).join('');const week={};for(const r of all){const d=localDate(r.date);const monday=addDays(r.date,-((d.getDay()+6)%7));(week[monday]??=[]).push(r)}$('weeklySummary').innerHTML=Object.entries(week).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>`<div class="line"><span>Week of ${k}</span><b>${fmt(stats(v).h)} hours · ${money(stats(v).amount)}</b></div>`).join('')||'<p class="muted">No entries.</p>';$('historyList').innerHTML=rows.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>htmlEntry(r)).join('')||'<article><p class="muted">No entries match your filters.</p></article>'}
 function renderHolidays(){$('holidayList').innerHTML=Object.entries(state.holidays).sort((a,b)=>a[0].localeCompare(b[0])).map(([d,name])=>`<div class="line"><span>${escape(d)} · ${escape(name)}</span><button data-holiday-delete="${d}">Delete</button></div>`).join('')||'<p class="muted">No holidays saved.</p>'}
-function render(){renderDashboard();renderCalendar();renderHistory();renderHolidays()}
+// Render only the visible screen: re-rendering all reports and the full calendar
+// on every save or tab switch caused avoidable work on low-end Android phones.
+function render(){
+ const active=document.querySelector('.page.active')?.id;
+ if(active==='dashboard')renderDashboard();
+ else if(active==='calendar')renderCalendar();
+ else if(active==='history')renderHistory();
+ else if(active==='settings')renderHolidays();
+}
+
 function timeMinutes(t){const [h,m]=t.split(':').map(Number);return h*60+m}
 function makeInterval(it={start:'16:00',end:'19:00',startOffset:0,endOffset:0},label='Overtime session'){
  const el=document.createElement('div');el.className='interval';

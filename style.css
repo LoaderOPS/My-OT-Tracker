@@ -67,3 +67,49 @@ button,input,select,textarea{max-width:100%}
 }
 
 .motivation-autoplay{font-size:11px;color:#cbe3fa;text-align:center}.sessionNote{font-size:12px;margin:2px 0 0}.interval{margin-bottom:12px}.interval .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}#addInterval[hidden]{display:none!important}
+
+
+/* v12 Mobile app shell: edge-to-edge content and larger usable controls. */
+html,body{max-width:100%;overflow-x:clip}
+body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+@media screen and (max-width:900px){
+  main{width:100%;max-width:100%;margin:0;padding:14px clamp(10px,3vw,20px) 24px}
+  header{padding:13px clamp(13px,3vw,20px);gap:8px}
+  article{width:100%;max-width:none;margin-bottom:12px}
+  .page,.page>form{width:100%;max-width:100%}
+  nav{max-width:none!important;width:100%;border-radius:0!important;left:0;right:0}
+  .interval,.breakdown{width:100%;min-width:0}
+  .interval .two,.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two>*{min-width:0}
+  input,select,textarea{width:100%;min-width:0;font-size:16px}
+  .sectionHead input{max-width:min(47vw,180px)}
+  .hero .large{font-size:clamp(29px,8vw,42px)}
+}
+@media screen and (max-width:480px){
+  main{padding:12px 10px 22px}
+  h2{font-size:20px}
+  article{padding:15px;border-radius:15px}
+  .hero{padding:18px 17px}
+  .motivation{min-height:0;padding:18px 16px}
+  .motivation-quote{font-size:clamp(19px,5.5vw,23px);min-height:0;margin:12px 0 6px}
+  .motivation-icon{font-size:32px;margin-top:12px}
+  .motivation-note{margin-bottom:8px}
+  .metrics{gap:8px}
+  .metrics article{padding:12px;min-height:77px}
+  .metrics strong{font-size:clamp(18px,5.3vw,22px)}
+  label{font-size:13px}
+  input,select,textarea{min-height:46px}
+  nav button{font-size:23px}
+  nav button span{font-size:11px}
+  #add .interval{padding:10px}
+  #add .interval label{font-size:12px}
+  #add .interval input{padding:10px 6px}
+  .calendarGrid{gap:3px}
+  .day{min-height:52px;padding:5px 1px;font-size:12px}
+  .day small{font-size:9px;overflow:hidden;text-overflow:ellipsis}
+}
+/* For Android browsers erroneously advertising a tablet/desktop-sized viewport. */
+@media (pointer:coarse) and (max-width:1100px){
+  main{max-width:100%;width:100%;margin-inline:0}
+  nav{max-width:100%!important;width:100%}
+}

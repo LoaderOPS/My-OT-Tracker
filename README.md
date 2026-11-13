@@ -41,3 +41,20 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - Historical records and snapshots remain stored. Export JSON backup before updating.
 
 - One saved overtime entry per work date: edit it to add both sessions, so the first-hour multiplier is not accidentally applied twice.
+
+
+## v11 Performance optimization
+- Render only the active screen; don't rebuild full calendar, reports, and chart together.
+- Prefer cached static files to avoid slow loading on Android and support offline.
+- Navigation falls back to the local offline page after a short network timeout.
+- 36 motivational quotes still rotate every 5.5 seconds when Home is visible.
+- No changes to salaries, overtime multipliers, shift rules, or saved database schema.
+- Before deploying: Settings → Download JSON backup. Do not clear app/site data.
+
+
+## v12 — Mobile full-width + faster startup
+- Mobile content fills the available viewport, including installed PWA mode. Inputs are larger and cards take less vertical space on smaller phones.
+- Startup uses cached app shell instantly when available, instead of waiting up to 1.8 s for the network.
+- Reinstalling or clearing browser data is NOT needed. Back up records first, then upload all v12 files to the same GitHub Pages repository.
+- On Android Chrome, disable **Desktop site** for the app URL if enabled. The layout responds to actual viewport size.
+- All payroll calculations, shift rules, and stored database remain unchanged.
