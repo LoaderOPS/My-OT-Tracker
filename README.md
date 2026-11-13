@@ -101,3 +101,13 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - Optional Firebase Google cloud snapshot backup when configured. **Not enabled by default.** See `SETUP_FIREBASE.md`.
 - First cloud connection checks for an existing remote backup; no automatic overwrite or restore. This is NOT multi-device live sync.
 - Always export JSON before update. No IndexedDB schema migration required; original DB name and `state` key are preserved.
+
+
+## v18 — Dark Modern Blue Polish
+- Fixed dark-mode blank white area by covering the full document/root, body and viewport with the dark page background.
+- Harmonized dark background/card/nav/shift/selected date colors using a cohesive blue palette.
+- Improved text color and input contrast; cyan overtime indicators and selected-date highlight.
+- Removed redundant motivation navigation button on mobile; quotes continue to rotate automatically.
+- No edits to payroll, weekend classification logic, offline data format or cloud backup configuration.
+- To update: back up data via Settings > Download JSON backup, upload ALL files including `style-v18.css`, then check that the header says v18.
+- Firebase still requires manual project setup before automatic cloud backup works.

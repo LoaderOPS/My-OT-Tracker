@@ -1,5 +1,5 @@
-const CACHE='my-ot-tracker-v17';
-const ASSETS=['./','./index.html','./app.mjs','./core.mjs','./style-v17.css','./firebase-config.mjs','./cloud-backup.mjs','./manifest.webmanifest','./icon.svg','./contoh-roster.csv'];
+const CACHE='my-ot-tracker-v18';
+const ASSETS=['./','./index.html','./app.mjs','./core.mjs','./style-v18.css','./firebase-config.mjs','./cloud-backup.mjs','./manifest.webmanifest','./icon.svg','./contoh-roster.csv'];
 self.addEventListener('install',event=>event.waitUntil((async()=>{
  const c=await caches.open(CACHE);
  await Promise.all(ASSETS.map(async url=>{try{const r=await fetch(new Request(url,{cache:'reload'}));if(r.ok)await c.put(url,r)}catch{}}));
