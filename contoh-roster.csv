@@ -1,10 +1,10 @@
-Tanggal,Shift,Tipe Hari
+Date,Shift,Day_Type
 16/11/2026,P,work
 17/11/2026,P,work
 18/11/2026,P,work
 19/11/2026,P,work
 20/11/2026,P,work
-21/11/2026,OFF,rest
+21/11/2026,P,work
 22/11/2026,OFF,rest
 23/11/2026,S,work
 24/11/2026,S,work

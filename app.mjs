@@ -1,5 +1,210 @@
+
+// Motivation-only rotating welcome card; intentionally no savings goals or progress tracking.
+const MOTIVATIONS=[
+  {
+    "icon": "✈️",
+    "quote": "One day, you will see in person the places you used to admire on your phone.",
+    "note": "Dreaming of going abroad"
+  },
+  {
+    "icon": "🕋",
+    "quote": "May the small steps you take today lead to the Holy Land one day.",
+    "note": "A prayer for Umrah"
+  },
+  {
+    "icon": "🌱",
+    "quote": "Not every result is visible today. Something good may be growing quietly.",
+    "note": "Trust the process"
+  },
+  {
+    "icon": "🌍",
+    "quote": "The world is vast. May you have the chance to explore it with your own eyes.",
+    "note": "Explore the world"
+  },
+  {
+    "icon": "💙",
+    "quote": "You are allowed to be tired. Your dreams should never cost you your well-being.",
+    "note": "Take care of yourself"
+  },
+  {
+    "icon": "✨",
+    "quote": "One day, you will be grateful that you kept trying.",
+    "note": "Keep moving forward"
+  },
+  {
+    "icon": "🧳",
+    "quote": "A passport, a suitcase, and a boarding pass—may they become part of your story.",
+    "note": "Your travel dreams"
+  },
+  {
+    "icon": "🤲",
+    "quote": "May your earnings bring blessings, peace, and the pilgrimage you hope to make.",
+    "note": "Faith and gratitude"
+  },
+  {
+    "icon": "🌤️",
+    "quote": "A difficult day does not mean you will have a difficult future.",
+    "note": "New hope"
+  },
+  {
+    "icon": "⭐",
+    "quote": "There are still many kinds of happiness waiting for you. Give life a chance.",
+    "note": "Look ahead"
+  },
+  {
+    "icon": "🌿",
+    "quote": "Growth does not have to be fast. Sometimes, not giving up is enough.",
+    "note": "Small steps"
+  },
+  {
+    "icon": "🛫",
+    "quote": "A dream of traveling far begins with believing that you can.",
+    "note": "Dream boldly"
+  },
+  {
+    "icon": "🕊️",
+    "quote": "May today’s tiredness turn into tomorrow’s unexpected good news.",
+    "note": "A little prayer"
+  },
+  {
+    "icon": "🌅",
+    "quote": "You are not behind. You are living your own journey, at your own pace.",
+    "note": "Your own timeline"
+  },
+  {
+    "icon": "💫",
+    "quote": "What feels far away today may become a beautiful memory someday.",
+    "note": "Hold on to hope"
+  },
+  {
+    "icon": "🌏",
+    "quote": "Imagine the day you say: I really made it here.",
+    "note": "Your dream journey"
+  },
+  {
+    "icon": "🕋",
+    "quote": "May you one day make your prayers in front of the Kaaba.",
+    "note": "A dream of Umrah"
+  },
+  {
+    "icon": "📖",
+    "quote": "Your story is not over. There are many beautiful chapters yet to come.",
+    "note": "Your life story"
+  },
+  {
+    "icon": "🌷",
+    "quote": "You do not have to prove yourself to everyone. Follow the path that matters to you.",
+    "note": "For yourself"
+  },
+  {
+    "icon": "💪",
+    "quote": "Hard work matters, but coming home with a peaceful heart matters too.",
+    "note": "Find balance"
+  },
+  {
+    "icon": "🚀",
+    "quote": "Big dreams do not demand big steps every single day.",
+    "note": "Stay consistent"
+  },
+  {
+    "icon": "☀️",
+    "quote": "Each new day offers another small chance to move toward what you love.",
+    "note": "Morning encouragement"
+  },
+  {
+    "icon": "🧭",
+    "quote": "Focus on your direction, not how quickly other people are moving.",
+    "note": "Your own path"
+  },
+  {
+    "icon": "🌙",
+    "quote": "If today has been long, give yourself permission to rest.",
+    "note": "Evening reminder"
+  },
+  {
+    "icon": "🌊",
+    "quote": "Courage is not the absence of fear. It is trying even when the outcome is uncertain.",
+    "note": "Be brave"
+  },
+  {
+    "icon": "🎒",
+    "quote": "May your list of dream destinations become a collection of travel stories.",
+    "note": "New adventures"
+  },
+  {
+    "icon": "🤍",
+    "quote": "May your work be a source of blessing, not a reason to lose your happiness.",
+    "note": "Meaningful work"
+  },
+  {
+    "icon": "🌟",
+    "quote": "Maybe not today. But there is nothing wrong with preparing for your moment.",
+    "note": "Prepare for opportunity"
+  },
+  {
+    "icon": "🪴",
+    "quote": "You are nurturing your hopes. Remember to nurture yourself too.",
+    "note": "Self-care"
+  },
+  {
+    "icon": "🏞️",
+    "quote": "There are sunrises in places you have not discovered yet.",
+    "note": "See the world"
+  },
+  {
+    "icon": "🕌",
+    "quote": "May your intention to worship be made easy at the right time.",
+    "note": "A prayer for Umrah"
+  },
+  {
+    "icon": "💌",
+    "quote": "Remember to notice the little things that make you happy, too.",
+    "note": "Enjoy life"
+  },
+  {
+    "icon": "🗺️",
+    "quote": "It is okay if the route changes. A meaningful destination is still worth pursuing.",
+    "note": "Keep growing"
+  },
+  {
+    "icon": "🍃",
+    "quote": "Resting is not falling behind. It is how you find the strength to continue.",
+    "note": "Rest well"
+  },
+  {
+    "icon": "✨",
+    "quote": "May you someday live the life you once only prayed for.",
+    "note": "Dreams and prayers"
+  },
+  {
+    "icon": "💙",
+    "quote": "Thank you for trying today. Tomorrow, begin again with a lighter heart.",
+    "note": "Be kind to yourself"
+  }
+];
+let motivationIndex=0;
+function showMotivation(index){
+ motivationIndex=(index+MOTIVATIONS.length)%MOTIVATIONS.length;
+ const m=MOTIVATIONS[motivationIndex];
+ document.getElementById('motivationIcon').textContent=m.icon;
+ document.getElementById('motivationQuote').textContent=m.quote;
+ document.getElementById('motivationNote').textContent=m.note;
+ document.getElementById('motivationCounter').textContent=String(motivationIndex+1).padStart(2,'0')+' / '+String(MOTIVATIONS.length).padStart(2,'0');
+ document.querySelectorAll('.motivation-dot').forEach((el,i)=>{el.classList.toggle('active',i===motivationIndex);el.setAttribute('aria-current',i===motivationIndex?'true':'false');});
+}
+function initMotivation(){
+ const dots=document.getElementById('motivationDots');
+ if(MOTIVATIONS.length<=10)MOTIVATIONS.forEach((_,i)=>{const b=document.createElement('button');b.type='button';b.className='motivation-dot';b.setAttribute('aria-label','Show quote '+(i+1));b.addEventListener('click',()=>showMotivation(i));dots.appendChild(b)});
+ document.getElementById('motivationPrev').addEventListener('click',()=>showMotivation(motivationIndex-1));
+ document.getElementById('motivationNext').addEventListener('click',()=>showMotivation(motivationIndex+1));
+ showMotivation(0);
+ if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  window.setInterval(()=>{if(!document.hidden&&document.getElementById('dashboard').classList.contains('active'))showMotivation(motivationIndex+1)},5500);
+ }
+}
+
 import {DEFAULTS,DAY_TYPES,SHIFTS,money,dateKey,localDate,addDays,shiftFor,dayTypeFor,isAfternoonSaturday,isMandatoryRestDate,calculate,parseCSV,parseRoster} from './core.mjs';
-const $=id=>document.getElementById(id);const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const today=dateKey(new Date());const month=today.slice(0,7);const fmt=n=>Number(n||0).toLocaleString('id-ID',{maximumFractionDigits:2});let selectedDate=today,editing=null,pendingImport=null;
+const $=id=>document.getElementById(id);const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const today=dateKey(new Date());const month=today.slice(0,7);const fmt=n=>Number(n||0).toLocaleString('en-GB',{maximumFractionDigits:2});let selectedDate=today,editing=null,pendingImport=null;
 const fresh=()=>({settings:structuredClone(DEFAULTS),roster:{},holidays:{},records:[]});let state=fresh();
 function show(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500)}
 const idb=()=>new Promise((resolve,reject)=>{const req=indexedDB.open('MyOTTrackerDB',1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('data'))req.result.createObjectStore('data')};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error)});
@@ -7,30 +212,30 @@ async function readDB(){const db=await idb();return new Promise((resolve,reject)
 async function persist(){const db=await idb();await new Promise((resolve,reject)=>{const tx=db.transaction('data','readwrite');tx.objectStore('data').put(state,'state');tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});db.close();render()}
 function navigate(page){document.querySelectorAll('.page').forEach(n=>n.classList.toggle('active',n.id===page));document.querySelectorAll('nav button').forEach(n=>n.classList.toggle('selected',n.dataset.page===page));window.scrollTo({top:0,behavior:'instant'});render()}
 function shift(d){return shiftFor(d,state.settings,state.roster)}function daytype(d){return dayTypeFor(d,state.settings,state.roster,state.holidays)}function calc(r){return calculate({...r,dayType:isMandatoryRestDate(r.date,state.settings)&&r.dayType!=='holiday'?'rest':r.dayType},state.settings)}function stats(rows){let h=0,amount=0,gross=0,breaks=0,restHours=0,weekdayHours=0,holidayHours=0;const days=new Set();for(const r of rows){try{const x=calc(r);h+=x.net;gross+=x.gross;breaks+=x.breakHours;amount+=x.amount;days.add(r.date);if(x.dayType==='rest')restHours+=x.net;else if(x.dayType==='holiday')holidayHours+=x.net;else weekdayHours+=x.net}catch{}}return{h,amount,gross,breaks,restHours,weekdayHours,holidayHours,days:days.size}}
-function htmlEntry(r,actions=true){let x;try{x=calc(r)}catch(e){return `<div class="item">Kesalahan pada ${escape(r.date)}: ${escape(e.message)}</div>`}return `<div class="item"><div class="itemhead"><strong>${escape(r.date)} · ${escape(SHIFTS[r.shift])}</strong><strong>${money(x.amount)}</strong></div><div class="muted">${escape(DAY_TYPES[x.dayType])} · ${fmt(x.gross)} jam bruto − ${fmt(x.breakHours)} jam istirahat = <b>${fmt(x.net)} jam bersih</b></div><div class="muted">${r.intervals.map(i=>`${i.start}${i.startOffset?'+1':''}–${i.end}${i.endOffset?'+1':''}`).join(', ')} ${r.notes?' · '+escape(r.notes):''}</div><details><summary>Rincian hitung</summary>${x.bands.map(b=>`<div class="line"><span>${escape(b.label)}: ${fmt(b.hours)} jam × ${fmt(b.multiplier)} × ${money(x.rate)}</span><b>${money(b.amount)}</b></div>`).join('')}<p class="hint">Istirahat otomatis: ${fmt(x.automaticBreak)} jam; koreksi tambahan: ${fmt(x.manualBreak)} jam.</p></details>${actions?`<div class="itembuttons"><button data-edit="${escape(r.id)}">Edit</button><button data-delete="${escape(r.id)}">Hapus</button></div>`:''}</div>`}
-function renderDashboard(){const rows=state.records.filter(r=>r.date.startsWith(month));const s=stats(rows);$('todayLabel').textContent=new Intl.DateTimeFormat('id-ID',{dateStyle:'full'}).format(new Date());$('homeMoney').textContent=money(s.amount);$('homeMonth').textContent=new Intl.DateTimeFormat('id-ID',{month:'long',year:'numeric'}).format(localDate(`${month}-01`));$('homeHours').textContent=fmt(s.h)+' jam';$('homeDays').textContent=s.days;$('homeDrafts').textContent=rows.filter(r=>r.incomplete).length;$('homeRest').textContent=fmt(s.restHours+s.holidayHours)+' jam';$('todayShift').textContent=SHIFTS[shift(today)];$('nextShift').textContent=SHIFTS[shift(addDays(today,7))];$('todayWork').textContent=shift(today)==='P'?'08.00–16.00':shift(today)==='S'?'16.00–00.00':'Libur';$('recent').innerHTML=state.records.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4).map(r=>htmlEntry(r,false)).join('')||'<p class="muted">Belum ada catatan lembur.</p>';
+function htmlEntry(r,actions=true){let x;try{x=calc(r)}catch(e){return `<div class="item">Error on ${escape(r.date)}: ${escape(e.message)}</div>`}return `<div class="item"><div class="itemhead"><strong>${escape(r.date)} · ${escape(SHIFTS[r.shift])}</strong><strong>${money(x.amount)}</strong></div><div class="muted">${escape(DAY_TYPES[x.dayType])} · ${fmt(x.gross)} gross hours − ${fmt(x.breakHours)} break hours = <b>${fmt(x.net)} net hours</b></div><div class="muted">${r.intervals.map(i=>`${i.start}${i.startOffset?'+1':''}–${i.end}${i.endOffset?'+1':''}`).join(', ')} ${r.notes?' · '+escape(r.notes):''}</div><details><summary>Calculation details</summary>${x.bands.map(b=>`<div class="line"><span>${escape(b.label)}: ${fmt(b.hours)} hours × ${fmt(b.multiplier)} × ${money(x.rate)}</span><b>${money(b.amount)}</b></div>`).join('')}<p class="hint">Automatic break: ${fmt(x.automaticBreak)} hours; extra manual adjustment: ${fmt(x.manualBreak)} hours.</p></details>${actions?`<div class="itembuttons"><button data-edit="${escape(r.id)}">Edit</button><button data-delete="${escape(r.id)}">Delete</button></div>`:''}</div>`}
+function renderDashboard(){const rows=state.records.filter(r=>r.date.startsWith(month));const s=stats(rows);$('todayLabel').textContent=new Intl.DateTimeFormat('en-GB',{dateStyle:'full'}).format(new Date());$('homeMoney').textContent=money(s.amount);$('homeMonth').textContent=new Intl.DateTimeFormat('en-GB',{month:'long',year:'numeric'}).format(localDate(`${month}-01`));$('homeHours').textContent=fmt(s.h)+' hours';$('homeDays').textContent=s.days;$('homeDrafts').textContent=rows.filter(r=>r.incomplete).length;$('homeRest').textContent=fmt(s.restHours+s.holidayHours)+' hours';$('todayShift').textContent=SHIFTS[shift(today)];$('nextShift').textContent=SHIFTS[shift(addDays(today,7))];$('todayWork').textContent=shift(today)==='P'?'08.00–16.00':shift(today)==='S'?'16.00–00.00':'Off';$('recent').innerHTML=state.records.slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4).map(r=>htmlEntry(r,false)).join('')||'<p class="muted">No overtime entries yet.</p>';
 const data=[];for(let n=5;n>=0;n--){let d=localDate(`${month}-01`);d.setMonth(d.getMonth()-n);let m=dateKey(d).slice(0,7);data.push({m,amount:stats(state.records.filter(r=>r.date.startsWith(m))).amount})}let max=Math.max(...data.map(v=>v.amount),1);$('chart').innerHTML=data.map(p=>`<div class="barWrap"><div class="bar" title="${escape(p.m)}: ${money(p.amount)}" style="height:${Math.max(3,105*p.amount/max)}px"></div><small>${escape(p.m.slice(5))}/${escape(p.m.slice(2,4))}</small></div>`).join('')}
-function renderCalendar(){const m=$('calendarMonth').value||month;const [year,mo]=m.split('-').map(Number),first=new Date(year,mo-1,1),count=new Date(year,mo,0).getDate();let out='';for(let i=0;i<first.getDay();i++)out+='<div class="day empty"></div>';for(let d=1;d<=count;d++){const date=`${m}-${String(d).padStart(2,'0')}`,sh=shift(date),type=daytype(date),has=state.records.some(r=>r.date===date);const code=(type==='rest'||type==='holiday'||sh==='OFF')?'off':sh.toLowerCase();out+=`<button class="day ${code} ${has?'hasOT':''} ${date===selectedDate?'selected':''}" data-date="${date}"><b>${d}</b><small>${sh==='OFF'?'Libur':sh==='P'?'Pagi':'Sore'}</small></button>`}$('calendarGrid').innerHTML=out;renderSelectedDay()}
-function renderSelectedDay(){const sh=shift(selectedDate),type=daytype(selectedDate),rr=state.records.filter(r=>r.date===selectedDate);$('selectedDay').innerHTML=`<h3>${selectedDate}</h3><p><b>${escape(SHIFTS[sh])}</b> · ${escape(DAY_TYPES[type])}</p><p class="muted">${rr.length?rr.length+' catatan lembur':'Belum ada catatan lembur (belum tentu ada lembur)'}</p>${rr.map(r=>htmlEntry(r,false)).join('')}<div class="two"><label>Ubah shift<select id="overrideShift"><option value="P" ${sh==='P'?'selected':''}>Pagi</option><option value="S" ${sh==='S'?'selected':''}>Sore</option><option value="OFF" ${sh==='OFF'?'selected':''}>Libur</option></select></label><label>Kategori<select id="overrideType">${Object.entries(DAY_TYPES).map(([k,v])=>`<option value="${k}" ${type===k?'selected':''}>${v}</option>`).join('')}</select></label></div><div class="actions"><button id="saveOverride">Simpan jadwal</button><button id="addSelected" class="primary">Catat lembur tanggal ini</button></div>`}
-function renderHistory(){const m=$('reportMonth').value||month,q=$('historySearch').value.trim().toLowerCase(),filter=$('historyFilter').value;const all=state.records.filter(r=>r.date.startsWith(m)),rows=all.filter(r=>(filter==='all'||calc(r).dayType===filter)&&[r.date,r.notes||'',SHIFTS[r.shift]].join(' ').toLowerCase().includes(q));const s=stats(all);let totalDays=0;const y=+m.slice(0,4),mm=+m.slice(5,7);for(let d=1;d<=new Date(y,mm,0).getDate();d++){const k=`${m}-${String(d).padStart(2,'0')}`;if(daytype(k)==='work'||daytype(k)==='scheduled')totalDays++}const lines=[['Referensi gaji bulanan',money(state.settings.salary)],['Tarif lembur tetap/jam',money(state.settings.hourly)],['Hari kerja terjadwal',totalDays+' hari'],['Hari dengan catatan lembur',s.days+' hari'],['Lembur hari kerja',fmt(s.weekdayHours)+' jam'],['Lembur hari istirahat',fmt(s.restHours)+' jam'],['Lembur hari libur',fmt(s.holidayHours)+' jam'],['Total bruto',fmt(s.gross)+' jam'],['Total istirahat',fmt(s.breaks)+' jam'],['Total bersih',fmt(s.h)+' jam'],['Estimasi pendapatan',money(s.amount)]];$('reportTotals').innerHTML='<h3>Rekap '+escape(m)+'</h3>'+lines.map(([k,v])=>`<div class="line"><span>${escape(k)}</span><b>${escape(v)}</b></div>`).join('');const week={};for(const r of all){const d=localDate(r.date);const monday=addDays(r.date,-((d.getDay()+6)%7));(week[monday]??=[]).push(r)}$('weeklySummary').innerHTML=Object.entries(week).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>`<div class="line"><span>Pekan ${k}</span><b>${fmt(stats(v).h)} jam · ${money(stats(v).amount)}</b></div>`).join('')||'<p class="muted">Tidak ada catatan.</p>';$('historyList').innerHTML=rows.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>htmlEntry(r)).join('')||'<article><p class="muted">Belum ada riwayat sesuai filter.</p></article>'}
-function renderHolidays(){$('holidayList').innerHTML=Object.entries(state.holidays).sort((a,b)=>a[0].localeCompare(b[0])).map(([d,name])=>`<div class="line"><span>${escape(d)} · ${escape(name)}</span><button data-holiday-delete="${d}">Hapus</button></div>`).join('')||'<p class="muted">Belum ada hari libur tersimpan.</p>'}
+function renderCalendar(){const m=$('calendarMonth').value||month;const [year,mo]=m.split('-').map(Number),first=new Date(year,mo-1,1),count=new Date(year,mo,0).getDate();let out='';for(let i=0;i<first.getDay();i++)out+='<div class="day empty"></div>';for(let d=1;d<=count;d++){const date=`${m}-${String(d).padStart(2,'0')}`,sh=shift(date),type=daytype(date),has=state.records.some(r=>r.date===date);const code=(type==='rest'||type==='holiday'||sh==='OFF')?'off':sh.toLowerCase();out+=`<button class="day ${code} ${has?'hasOT':''} ${date===selectedDate?'selected':''}" data-date="${date}"><b>${d}</b><small>${sh==='OFF'?'Off':sh==='P'?'Morning':'Afternoon'}</small></button>`}$('calendarGrid').innerHTML=out;renderSelectedDay()}
+function renderSelectedDay(){const sh=shift(selectedDate),type=daytype(selectedDate),rr=state.records.filter(r=>r.date===selectedDate);$('selectedDay').innerHTML=`<h3>${selectedDate}</h3><p><b>${escape(SHIFTS[sh])}</b> · ${escape(DAY_TYPES[type])}</p><p class="muted">${rr.length?rr.length+' overtime entries':'No entry yet (does not necessarily mean overtime was worked)'}</p>${rr.map(r=>htmlEntry(r,false)).join('')}<div class="two"><label>Change shift<select id="overrideShift"><option value="P" ${sh==='P'?'selected':''}>Morning</option><option value="S" ${sh==='S'?'selected':''}>Afternoon</option><option value="OFF" ${sh==='OFF'?'selected':''}>Off</option></select></label><label>Category<select id="overrideType">${Object.entries(DAY_TYPES).map(([k,v])=>`<option value="${k}" ${type===k?'selected':''}>${v}</option>`).join('')}</select></label></div><div class="actions"><button id="saveOverride">Save schedule</button><button id="addSelected" class="primary">Add overtime for this date</button></div>`}
+function renderHistory(){const m=$('reportMonth').value||month,q=$('historySearch').value.trim().toLowerCase(),filter=$('historyFilter').value;const all=state.records.filter(r=>r.date.startsWith(m)),rows=all.filter(r=>(filter==='all'||calc(r).dayType===filter)&&[r.date,r.notes||'',SHIFTS[r.shift]].join(' ').toLowerCase().includes(q));const s=stats(all);let totalDays=0;const y=+m.slice(0,4),mm=+m.slice(5,7);for(let d=1;d<=new Date(y,mm,0).getDate();d++){const k=`${m}-${String(d).padStart(2,'0')}`;if(daytype(k)==='work'||daytype(k)==='scheduled')totalDays++}const lines=[['Monthly salary reference',money(state.settings.salary)],['Fixed hourly overtime rate',money(state.settings.hourly)],['Scheduled workdays',totalDays+' hari'],['Days with overtime entries',s.days+' hari'],['Workday overtime',fmt(s.weekdayHours)+' hours'],['Rest-day overtime',fmt(s.restHours)+' hours'],['Public holiday overtime',fmt(s.holidayHours)+' hours'],['Total gross',fmt(s.gross)+' hours'],['Total breaks',fmt(s.breaks)+' hours'],['Total net',fmt(s.h)+' hours'],['Estimated earnings',money(s.amount)]];$('reportTotals').innerHTML='<h3>Summary '+escape(m)+'</h3>'+lines.map(([k,v])=>`<div class="line"><span>${escape(k)}</span><b>${escape(v)}</b></div>`).join('');const week={};for(const r of all){const d=localDate(r.date);const monday=addDays(r.date,-((d.getDay()+6)%7));(week[monday]??=[]).push(r)}$('weeklySummary').innerHTML=Object.entries(week).sort((a,b)=>a[0].localeCompare(b[0])).map(([k,v])=>`<div class="line"><span>Week of ${k}</span><b>${fmt(stats(v).h)} hours · ${money(stats(v).amount)}</b></div>`).join('')||'<p class="muted">No entries.</p>';$('historyList').innerHTML=rows.sort((a,b)=>b.date.localeCompare(a.date)).map(r=>htmlEntry(r)).join('')||'<article><p class="muted">No entries match your filters.</p></article>'}
+function renderHolidays(){$('holidayList').innerHTML=Object.entries(state.holidays).sort((a,b)=>a[0].localeCompare(b[0])).map(([d,name])=>`<div class="line"><span>${escape(d)} · ${escape(name)}</span><button data-holiday-delete="${d}">Delete</button></div>`).join('')||'<p class="muted">No holidays saved.</p>'}
 function render(){renderDashboard();renderCalendar();renderHistory();renderHolidays()}
-function makeInterval(it={start:'16:00',end:'19:00',startOffset:0,endOffset:0}){const el=document.createElement('div');el.className='interval';el.innerHTML=`<div class="sectionHead"><strong>Interval</strong><button type="button" class="removeInterval">Hapus</button></div><div class="two"><label>Jam mulai<input class="start" type="time" required value="${it.start}"></label><label>Hari mulai<select class="startOffset"><option value="0" ${!it.startOffset?'selected':''}>Hari kerja</option><option value="1" ${it.startOffset?'selected':''}>+1 hari</option></select></label><label>Jam selesai<input class="end" type="time" required value="${it.end}"></label><label>Hari selesai<select class="endOffset"><option value="0" ${!it.endOffset?'selected':''}>Hari kerja</option><option value="1" ${it.endOffset?'selected':''}>+1 hari</option></select></label></div>`;el.querySelector('.removeInterval').onclick=()=>{if($('intervals').children.length>1){el.remove();updateCalc()}};el.querySelectorAll('input,select').forEach(i=>i.addEventListener('input',updateCalc));$('intervals').appendChild(el)}
+function makeInterval(it={start:'16:00',end:'19:00',startOffset:0,endOffset:0}){const el=document.createElement('div');el.className='interval';el.innerHTML=`<div class="sectionHead"><strong>Interval</strong><button type="button" class="removeInterval">Delete</button></div><div class="two"><label>Start time<input class="start" type="time" required value="${it.start}"></label><label>Start day<select class="startOffset"><option value="0" ${!it.startOffset?'selected':''}>Work date</option><option value="1" ${it.startOffset?'selected':''}>+1 day</option></select></label><label>End time<input class="end" type="time" required value="${it.end}"></label><label>End day<select class="endOffset"><option value="0" ${!it.endOffset?'selected':''}>Work date</option><option value="1" ${it.endOffset?'selected':''}>+1 day</option></select></label></div>`;el.querySelector('.removeInterval').onclick=()=>{if($('intervals').children.length>1){el.remove();updateCalc()}};el.querySelectorAll('input,select').forEach(i=>i.addEventListener('input',updateCalc));$('intervals').appendChild(el)}
 function entryFromForm(){return{id:$('recordId').value||crypto.randomUUID(),date:$('otDate').value,shift:$('otShift').value,dayType:$('otType').value,intervals:[...$('intervals').children].map(el=>({start:el.querySelector('.start').value,end:el.querySelector('.end').value,startOffset:+el.querySelector('.startOffset').value,endOffset:+el.querySelector('.endOffset').value})),manualBreak:+$('manualBreak').value,notes:$('otNotes').value.trim()}}
-function updateCalc(){try{const r=entryFromForm();if(isMandatoryRestDate(r.date,state.settings)&&r.dayType!=='holiday'){r.dayType='rest';$('otType').value='rest';}const x=calc(r);$('liveCalc').innerHTML=`<div class="line"><span>Bruto</span><b>${fmt(x.gross)} jam</b></div><div class="line"><span>Istirahat otomatis</span><b>${fmt(x.automaticBreak)} jam</b></div><div class="line"><span>Istirahat total</span><b>${fmt(x.breakHours)} jam</b></div><div class="line"><span>Lembur bersih</span><b>${fmt(x.net)} jam</b></div>${x.bands.map(b=>`<div class="line"><span>${escape(b.label)} · ${fmt(b.hours)} × ${fmt(b.multiplier)}</span><b>${money(b.amount)}</b></div>`).join('')}<p>Perkiraan lembur</p><div class="total">${money(x.amount)}</div>`}catch(e){$('liveCalc').innerHTML=`<p class="muted">${escape(e.message)}</p>`}}
+function updateCalc(){try{const r=entryFromForm();if(isMandatoryRestDate(r.date,state.settings)&&r.dayType!=='holiday'){r.dayType='rest';$('otType').value='rest';}const x=calc(r);$('liveCalc').innerHTML=`<div class="line"><span>Gross</span><b>${fmt(x.gross)} hours</b></div><div class="line"><span>Automatic breaks</span><b>${fmt(x.automaticBreak)} hours</b></div><div class="line"><span>Total breaks</span><b>${fmt(x.breakHours)} hours</b></div><div class="line"><span>Net overtime</span><b>${fmt(x.net)} hours</b></div>${x.bands.map(b=>`<div class="line"><span>${escape(b.label)} · ${fmt(b.hours)} × ${fmt(b.multiplier)}</span><b>${money(b.amount)}</b></div>`).join('')}<p>Estimated overtime payment</p><div class="total">${money(x.amount)}</div>`}catch(e){$('liveCalc').innerHTML=`<p class="muted">${escape(e.message)}</p>`}}
 function autoFormDate(){const date=$('otDate').value; if(!date)return;$('otShift').value=shift(date);$('otType').value=daytype(date);const sh=$('otShift').value;$('intervals').innerHTML='';makeInterval(sh==='P'?{start:'16:00',end:'19:00',startOffset:0,endOffset:0}:sh==='S'?{start:'08:00',end:'16:00',startOffset:0,endOffset:0}:{start:'08:00',end:'12:00',startOffset:0,endOffset:0});updateCalc()}
-function clearForm(date=today){editing=null;$('editorTitle').textContent='Catat lembur';$('otForm').reset();$('recordId').value='';$('otDate').value=date;$('manualBreak').value='0';autoFormDate()}
-function editRecord(id){const r=state.records.find(v=>v.id===id);if(!r)return;editing=id;$('editorTitle').textContent='Edit lembur';$('recordId').value=r.id;$('otDate').value=r.date;$('otShift').value=r.shift;$('otType').value=r.dayType;$('manualBreak').value=r.manualBreak;$('otNotes').value=r.notes||'';$('intervals').innerHTML='';r.intervals.forEach(i=>makeInterval(i));updateCalc();navigate('add')}
-function settingInputs(){const s=state.settings;for(const id of ['salary','hourly','rotationStart','firstShift','restThreshold','reminderTime'])$(id).value=s[id];$('weekday1').value=s.weekday[0];$('weekday2').value=s.weekday[1];$('rest1').value=s.rest[0];$('rest2').value=s.rest[1];$('rest3').value=s.rest[2];$('reminderEnabled').checked=s.reminderEnabled;const names=['Min','Sen','Sel','Rab','Kam','Jum','Sab'];$('restDays').innerHTML=names.map((n,i)=>`<label><input type="checkbox" value="${i}" ${i===0||s.restDays.includes(i)?'checked':''} ${i===0?'disabled':''}> ${n}</label>`).join('')}
+function clearForm(date=today){editing=null;$('editorTitle').textContent='Add overtime';$('otForm').reset();$('recordId').value='';$('otDate').value=date;$('manualBreak').value='0';autoFormDate()}
+function editRecord(id){const r=state.records.find(v=>v.id===id);if(!r)return;editing=id;$('editorTitle').textContent='Edit overtime';$('recordId').value=r.id;$('otDate').value=r.date;$('otShift').value=r.shift;$('otType').value=r.dayType;$('manualBreak').value=r.manualBreak;$('otNotes').value=r.notes||'';$('intervals').innerHTML='';r.intervals.forEach(i=>makeInterval(i));updateCalc();navigate('add')}
+function settingInputs(){const s=state.settings;for(const id of ['salary','hourly','rotationStart','firstShift','restThreshold','reminderTime'])$(id).value=s[id];$('weekday1').value=s.weekday[0];$('weekday2').value=s.weekday[1];$('rest1').value=s.rest[0];$('rest2').value=s.rest[1];$('rest3').value=s.rest[2];$('reminderEnabled').checked=s.reminderEnabled;const names=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];$('restDays').innerHTML=names.map((n,i)=>`<label><input type="checkbox" value="${i}" ${i===0||s.restDays.includes(i)?'checked':''} ${i===0?'disabled':''}> ${n}</label>`).join('')}
 function exportDownload(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000)}
 function csvCell(v){return '"'+String(v??'').replaceAll('"','""')+'"'}
-async function readRoster(file){if(!file||file.size>8e6)throw Error('Pilih file roster maksimal 8 MB');if(file.name.toLowerCase().endsWith('.csv'))return parseCSV(await file.text());if(!/\.(xlsx|xls)$/i.test(file.name))throw Error('Gunakan file CSV atau XLSX');if(!globalThis.XLSX){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';script.onload=resolve;script.onerror=()=>reject(Error('Parser Excel belum tersedia offline. Aktifkan internet sekali atau ubah roster ke CSV.'));document.head.appendChild(script)})}const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:false});return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''})}
-function events(){document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));$('calendarMonth').onchange=renderCalendar;$('reportMonth').onchange=renderHistory;$('historySearch').oninput=renderHistory;$('historyFilter').onchange=renderHistory;$('calendarGrid').onclick=e=>{const b=e.target.closest('[data-date]');if(b){selectedDate=b.dataset.date;renderCalendar()}};$('selectedDay').onclick=async e=>{if(e.target.id==='addSelected'){clearForm(selectedDate);navigate('add')}if(e.target.id==='saveOverride'){state.roster[selectedDate]={shift:$('overrideShift').value,dayType:isMandatoryRestDate(selectedDate,state.settings)&&$('overrideType').value!=='holiday'?'rest':$('overrideType').value,source:'manual'};await persist();show('Jadwal diperbarui.')}};$('addInterval').onclick=()=>{makeInterval({start:'01:00',end:'03:00',startOffset:1,endOffset:1});updateCalc()};$('otDate').onchange=autoFormDate;$('otShift').onchange=()=>{updateCalc()};$('otType').onchange=updateCalc;$('manualBreak').oninput=updateCalc;$('cancelEdit').onclick=()=>clearForm();$('otForm').onsubmit=async e=>{e.preventDefault();try{const r=entryFromForm();if(isMandatoryRestDate(r.date,state.settings)&&r.dayType!=='holiday')r.dayType='rest';if(!r.date||!r.intervals.length)throw Error('Lengkapi tanggal dan interval');const x=calc(r);if(x.net<=0)throw Error('Lembur bersih harus lebih dari nol');if(!editing&&state.records.some(old=>old.date===r.date&&old.intervals.some(a=>r.intervals.some(b=>a.start===b.start&&a.end===b.end&&a.startOffset===b.startOffset&&a.endOffset===b.endOffset))))throw Error('Interval identik sudah dicatat pada tanggal ini');const idx=state.records.findIndex(old=>old.id===r.id);if(idx>=0){r.rateSnapshot=state.records[idx].rateSnapshot;r.ruleSnapshot=state.records[idx].ruleSnapshot;state.records[idx]=r}else{r.rateSnapshot=Number(state.settings.hourly);r.ruleSnapshot={weekday:[...state.settings.weekday],rest:[...state.settings.rest],restThreshold:Number(state.settings.restThreshold)};state.records.push(r)}await persist();clearForm();navigate('history');show('Lembur tersimpan')}catch(err){alert(err.message)}};
-$('historyList').onclick=async e=>{const ed=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(ed)editRecord(ed.dataset.edit);if(del&&confirm('Hapus catatan lembur ini?')){state.records=state.records.filter(r=>r.id!==del.dataset.delete);await persist();show('Catatan dihapus')}};
-$('settingsForm').onsubmit=async e=>{e.preventDefault();const s=state.settings;s.salary=+$('salary').value;s.hourly=+$('hourly').value;s.weekday=[+$('weekday1').value,+$('weekday2').value];s.rest=[+$('rest1').value,+$('rest2').value,+$('rest3').value];s.restThreshold=+$('restThreshold').value;s.rotationStart=$('rotationStart').value;s.firstShift=$('firstShift').value;s.restDays=[...new Set([0,...$('restDays').querySelectorAll('input:checked')].map(i=>typeof i==='number'?i:+i.value))];s.reminderEnabled=$('reminderEnabled').checked;s.reminderTime=$('reminderTime').value;if(!s.rotationStart||!Number.isFinite(s.hourly)||s.hourly<0||s.restThreshold<1||[...s.weekday,...s.rest].some(v=>!Number.isFinite(v)||v<0)){alert('Periksa nilai pengaturan');return}await persist();show('Pengaturan disimpan, catatan lama tidak berubah')};$('saveHoliday').onclick=async()=>{const date=$('holidayDate').value,name=$('holidayName').value.trim();if(!date||!name)return show('Lengkapi tanggal dan nama libur');state.holidays[date]=name;await persist();$('holidayName').value='';show('Hari libur ditambahkan')};$('holidayList').onclick=async e=>{const b=e.target.closest('[data-holiday-delete]');if(b&&confirm('Hapus hari libur?')){delete state.holidays[b.dataset.holidayDelete];await persist()}};
-$('previewRoster').onclick=async()=>{try{const file=$('rosterFile').files[0],rows=await readRoster(file);pendingImport=parseRoster(rows);const dates=Object.keys(pendingImport),overwrites=dates.filter(d=>state.roster[d]).length;$('rosterPreview').innerHTML=`<p><b>${dates.length} tanggal valid.</b> ${overwrites} tanggal akan mengganti roster lama. Periksa sebelum konfirmasi.</p>${dates.slice(0,12).map(d=>`<div class="line"><span>${d}</span><b>${SHIFTS[pendingImport[d].shift]}</b></div>`).join('')}<button id="confirmImport" class="primary full">Konfirmasi impor</button>`}catch(e){pendingImport=null;$('rosterPreview').textContent='Gagal: '+e.message}};$('rosterPreview').onclick=async e=>{if(e.target.id==='confirmImport'&&pendingImport){const count=Object.keys(pendingImport).length;for(const [date,item] of Object.entries(pendingImport)){if(isMandatoryRestDate(date,state.settings)&&item.dayType!=='holiday')item.dayType='rest';}Object.assign(state.roster,pendingImport);pendingImport=null;$('rosterPreview').innerHTML='';await persist();show(count+' tanggal roster diimpor')}};
-$('exportCSV').onclick=()=>{const m=$('reportMonth').value;const records=state.records.filter(r=>r.date.startsWith(m));const header=['Tanggal','Shift','Kategori','Interval','Bruto (jam)','Istirahat (jam)','Bersih (jam)','Tarif per jam','Estimasi (Rp)','Catatan'];const lines=records.map(r=>{const c=calc(r);return[r.date,SHIFTS[r.shift],DAY_TYPES[r.dayType],r.intervals.map(i=>`${i.start}+${i.startOffset}–${i.end}+${i.endOffset}`).join(' | '),c.gross,c.breakHours,c.net,c.rate,c.amount,r.notes].map(csvCell).join(',')});exportDownload(`laporan-ot-${m}.csv`,'\ufeff'+[header.map(csvCell).join(','),...lines].join('\r\n'),'text/csv;charset=utf-8')};$('printPDF').onclick=()=>{navigate('history');window.print()};$('backupBtn').onclick=()=>exportDownload(`backup-my-ot-${today}.json`,JSON.stringify(state,null,2),'application/json');$('restoreFile').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const data=JSON.parse(await file.text());if(!data.settings||!Array.isArray(data.records)||!data.roster||!data.holidays)throw Error('Struktur backup tidak sesuai');for(const r of data.records)calculate(r,data.settings);if(confirm('Ganti seluruh data saat ini dengan backup?')){state=data;await persist();settingInputs();show('Backup dipulihkan')}}catch(err){alert('Backup gagal: '+err.message)}e.target.value=''};$('resetSettings').onclick=async()=>{if(confirm('Reset hanya pengaturan? Riwayat lembur tidak dihapus.')){state.settings=structuredClone(DEFAULTS);settingInputs();await persist()}};$('notificationPermission').onclick=async()=>{if(!('Notification'in window))return show('Notifikasi tidak tersedia');const p=await Notification.requestPermission();show('Izin notifikasi: '+p)};
+async function readRoster(file){if(!file||file.size>8e6)throw Error('Select a roster file under 8 MB');if(file.name.toLowerCase().endsWith('.csv'))return parseCSV(await file.text());if(!/\.(xlsx|xls)$/i.test(file.name))throw Error('Use a CSV or XLSX file');if(!globalThis.XLSX){await new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';script.onload=resolve;script.onerror=()=>reject(Error('Excel reader is not available offline yet. Connect once or convert the roster to CSV.'));document.head.appendChild(script)})}const wb=XLSX.read(await file.arrayBuffer(),{type:'array',cellDates:false});return XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''})}
+function events(){document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>navigate(b.dataset.page));$('calendarMonth').onchange=renderCalendar;$('reportMonth').onchange=renderHistory;$('historySearch').oninput=renderHistory;$('historyFilter').onchange=renderHistory;$('calendarGrid').onclick=e=>{const b=e.target.closest('[data-date]');if(b){selectedDate=b.dataset.date;renderCalendar()}};$('selectedDay').onclick=async e=>{if(e.target.id==='addSelected'){clearForm(selectedDate);navigate('add')}if(e.target.id==='saveOverride'){state.roster[selectedDate]={shift:$('overrideShift').value,dayType:isMandatoryRestDate(selectedDate,state.settings)&&$('overrideType').value!=='holiday'?'rest':$('overrideType').value,source:'manual'};await persist();show('Schedule updated.')}};$('addInterval').onclick=()=>{makeInterval({start:'01:00',end:'03:00',startOffset:1,endOffset:1});updateCalc()};$('otDate').onchange=autoFormDate;$('otShift').onchange=()=>{updateCalc()};$('otType').onchange=updateCalc;$('manualBreak').oninput=updateCalc;$('cancelEdit').onclick=()=>clearForm();$('otForm').onsubmit=async e=>{e.preventDefault();try{const r=entryFromForm();if(isMandatoryRestDate(r.date,state.settings)&&r.dayType!=='holiday')r.dayType='rest';if(!r.date||!r.intervals.length)throw Error('Enter a date and an overtime interval');const x=calc(r);if(x.net<=0)throw Error('Net overtime must be greater than zero');if(!editing&&state.records.some(old=>old.date===r.date&&old.intervals.some(a=>r.intervals.some(b=>a.start===b.start&&a.end===b.end&&a.startOffset===b.startOffset&&a.endOffset===b.endOffset))))throw Error('An identical interval is already saved for this date');const idx=state.records.findIndex(old=>old.id===r.id);if(idx>=0){r.rateSnapshot=state.records[idx].rateSnapshot;r.ruleSnapshot=state.records[idx].ruleSnapshot;state.records[idx]=r}else{r.rateSnapshot=Number(state.settings.hourly);r.ruleSnapshot={weekday:[...state.settings.weekday],rest:[...state.settings.rest],restThreshold:Number(state.settings.restThreshold)};state.records.push(r)}await persist();clearForm();navigate('history');show('Overtime saved')}catch(err){alert(err.message)}};
+$('historyList').onclick=async e=>{const ed=e.target.closest('[data-edit]'),del=e.target.closest('[data-delete]');if(ed)editRecord(ed.dataset.edit);if(del&&confirm('Delete this overtime entry?')){state.records=state.records.filter(r=>r.id!==del.dataset.delete);await persist();show('Entry deleted')}};
+$('settingsForm').onsubmit=async e=>{e.preventDefault();const s=state.settings;s.salary=+$('salary').value;s.hourly=+$('hourly').value;s.weekday=[+$('weekday1').value,+$('weekday2').value];s.rest=[+$('rest1').value,+$('rest2').value,+$('rest3').value];s.restThreshold=+$('restThreshold').value;s.rotationStart=$('rotationStart').value;s.firstShift=$('firstShift').value;s.restDays=[...new Set([0,...$('restDays').querySelectorAll('input:checked')].map(i=>typeof i==='number'?i:+i.value))];s.reminderEnabled=$('reminderEnabled').checked;s.reminderTime=$('reminderTime').value;if(!s.rotationStart||!Number.isFinite(s.hourly)||s.hourly<0||s.restThreshold<1||[...s.weekday,...s.rest].some(v=>!Number.isFinite(v)||v<0)){alert('Check your settings values');return}await persist();show('Settings saved. Existing entries are unchanged.')};$('saveHoliday').onclick=async()=>{const date=$('holidayDate').value,name=$('holidayName').value.trim();if(!date||!name)return show('Enter the holiday date and name');state.holidays[date]=name;await persist();$('holidayName').value='';show('Holiday added')};$('holidayList').onclick=async e=>{const b=e.target.closest('[data-holiday-delete]');if(b&&confirm('Delete this holiday?')){delete state.holidays[b.dataset.holidayDelete];await persist()}};
+$('previewRoster').onclick=async()=>{try{const file=$('rosterFile').files[0],rows=await readRoster(file);pendingImport=parseRoster(rows);const dates=Object.keys(pendingImport),overwrites=dates.filter(d=>state.roster[d]).length;$('rosterPreview').innerHTML=`<p><b>${dates.length} valid dates.</b> ${overwrites} dates will replace existing roster entries. Check before confirming.</p>${dates.slice(0,12).map(d=>`<div class="line"><span>${d}</span><b>${SHIFTS[pendingImport[d].shift]}</b></div>`).join('')}<button id="confirmImport" class="primary full">Confirm import</button>`}catch(e){pendingImport=null;$('rosterPreview').textContent='Failed: '+e.message}};$('rosterPreview').onclick=async e=>{if(e.target.id==='confirmImport'&&pendingImport){const count=Object.keys(pendingImport).length;for(const [date,item] of Object.entries(pendingImport)){if(isMandatoryRestDate(date,state.settings)&&item.dayType!=='holiday')item.dayType='rest';}Object.assign(state.roster,pendingImport);pendingImport=null;$('rosterPreview').innerHTML='';await persist();show(count+' roster dates imported')}};
+$('exportCSV').onclick=()=>{const m=$('reportMonth').value;const records=state.records.filter(r=>r.date.startsWith(m));const header=['Date','Shift','Category','Interval','Gross (hours)','Breaks (hours)','Net (hours)','Hourly rate','Estimate (IDR)','Notes'];const lines=records.map(r=>{const c=calc(r);return[r.date,SHIFTS[r.shift],DAY_TYPES[r.dayType],r.intervals.map(i=>`${i.start}+${i.startOffset}–${i.end}+${i.endOffset}`).join(' | '),c.gross,c.breakHours,c.net,c.rate,c.amount,r.notes].map(csvCell).join(',')});exportDownload(`overtime-report-${m}.csv`,'\ufeff'+[header.map(csvCell).join(','),...lines].join('\r\n'),'text/csv;charset=utf-8')};$('printPDF').onclick=()=>{navigate('history');window.print()};$('backupBtn').onclick=()=>exportDownload(`backup-my-ot-${today}.json`,JSON.stringify(state,null,2),'application/json');$('restoreFile').onchange=async e=>{try{const file=e.target.files[0];if(!file)return;const data=JSON.parse(await file.text());if(!data.settings||!Array.isArray(data.records)||!data.roster||!data.holidays)throw Error('Invalid backup format');for(const r of data.records)calculate(r,data.settings);if(confirm('Replace all current data with this backup?')){state=data;await persist();settingInputs();show('Backup restored')}}catch(err){alert('Backup restore failed: '+err.message)}e.target.value=''};$('resetSettings').onclick=async()=>{if(confirm('Reset only settings? Overtime history will not be deleted.')){state.settings=structuredClone(DEFAULTS);settingInputs();await persist()}};$('notificationPermission').onclick=async()=>{if(!('Notification'in window))return show('Notifications are unavailable');const p=await Notification.requestPermission();show('Notification permission: '+p)};
 }
-function checkReminder(){const s=state.settings;if(!s.reminderEnabled)return;const now=new Date(),time=now.toTimeString().slice(0,5);if(time<s.reminderTime)return;const key='reminder-'+today;if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');if(!state.records.some(r=>r.date===today)&&shift(today)!=='OFF'){show('Pengingat: periksa apakah ada lembur yang perlu dicatat');if('Notification'in window&&Notification.permission==='granted')new Notification('My OT Tracker',{body:'Periksa apakah ada lembur hari ini yang perlu dicatat.'})}}
-async function init(){try{const v=await readDB();if(v){state={...fresh(),...v,settings:{...DEFAULTS,...v.settings}}}}catch(e){alert('Penyimpanan lokal belum tersedia: '+e.message)}$('calendarMonth').value=month;$('reportMonth').value=month;$('otDate').value=today;events();settingInputs();clearForm();render();document.querySelector('nav [data-page="dashboard"]').classList.add('selected');checkReminder();document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkReminder()});$('offlineStatus').textContent=navigator.onLine?'Siap offline':'Offline';window.addEventListener('online',()=>{$('offlineStatus').textContent='Siap offline'});window.addEventListener('offline',()=>{$('offlineStatus').textContent='Offline'});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{})}
+function checkReminder(){const s=state.settings;if(!s.reminderEnabled)return;const now=new Date(),time=now.toTimeString().slice(0,5);if(time<s.reminderTime)return;const key='reminder-'+today;if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,'1');if(!state.records.some(r=>r.date===today)&&shift(today)!=='OFF'){show('Reminder: check if you have overtime to record');if('Notification'in window&&Notification.permission==='granted')new Notification('My OT Tracker',{body:'Check whether you have overtime to record today.'})}}
+async function init(){initMotivation();try{const v=await readDB();if(v){state={...fresh(),...v,settings:{...DEFAULTS,...v.settings}}}}catch(e){alert('Local storage is unavailable: '+e.message)}$('calendarMonth').value=month;$('reportMonth').value=month;$('otDate').value=today;events();settingInputs();clearForm();render();document.querySelector('nav [data-page="dashboard"]').classList.add('selected');checkReminder();document.addEventListener('visibilitychange',()=>{if(!document.hidden)checkReminder()});$('offlineStatus').textContent=navigator.onLine?'Offline ready':'Offline';window.addEventListener('online',()=>{$('offlineStatus').textContent='Offline ready'});window.addEventListener('offline',()=>{$('offlineStatus').textContent='Offline'});if('serviceWorker'in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{})}
 init();
