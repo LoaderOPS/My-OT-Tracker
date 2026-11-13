@@ -36,6 +36,12 @@ export function parseLocal(date,time,offset=0){if(!/^\d{4}-\d{2}-\d{2}$/.test(da
 export function overlap(a,b,c,d){return Math.max(0,Math.min(b,d)-Math.max(a,c))}
 export function standardBreakWindows(workDate,shift){const ans=[];if(shift==='P')ans.push([parseLocal(workDate,'18:00'),parseLocal(workDate,'19:00')]);if(shift==='S'){ans.push([parseLocal(workDate,'12:00'),parseLocal(workDate,'13:00')]);ans.push([parseLocal(workDate,'00:00',1),parseLocal(workDate,'01:00',1)])}return ans}
 export function calculate(record,settings){const intervals=record.intervals||[];let segments=[];for(const it of intervals){const start=parseLocal(record.date,it.start,it.startOffset||0),end=parseLocal(record.date,it.end,it.endOffset||0);if(end<=start)throw Error('End time must be after start time. Select +1 day if it crosses midnight');if(end-start>36*3600000)throw Error('An interval cannot exceed 36 hours');segments.push([start,end])}
+// Workday overtime must never include regular paid shift time.
+if((record.dayType==='work'||record.dayType==='scheduled')&&record.shift!=='OFF'){
+ const shiftStart=parseLocal(record.date,record.shift==='P'?'08:00':'16:00');
+ const shiftEnd=parseLocal(record.date,record.shift==='P'?'16:00':'00:00',record.shift==='S'?1:0);
+ for(const [a,b] of segments)if(overlap(a,b,shiftStart,shiftEnd)>0)throw Error('Overtime overlaps your scheduled shift. Record only time before or after your shift.');
+}
 segments.sort((a,b)=>a[0]-b[0]);for(let i=1;i<segments.length;i++)if(segments[i][0]<segments[i-1][1])throw Error('Overtime intervals overlap');
 const gross=segments.reduce((s,[a,b])=>s+(b-a)/60000,0);let breakDeduct=0;const breaks=[];for(const [a,b] of standardBreakWindows(record.date,record.shift)){const mins=segments.reduce((sum,[x,y])=>sum+overlap(x,y,a,b)/60000,0);if(mins>0){breakDeduct+=mins;breaks.push({label:`${new Date(a).getHours().toString().padStart(2,'0')}:00–${new Date(b).getHours().toString().padStart(2,'0')}:00`,minutes:mins})}}
 const manual=Number(record.manualBreak||0);if(!Number.isFinite(manual)||manual<0)throw Error('Invalid manual break adjustment');const totalBreak=Math.min(gross,Math.max(0,breakDeduct+manual));const net=Math.max(0,gross-totalBreak)/60;

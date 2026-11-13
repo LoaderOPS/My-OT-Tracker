@@ -43,3 +43,13 @@ assert.equal(dayTypeFor('2026-11-22',noSundaySetting),'rest');
 assert.equal(shiftFor('2026-11-22',noSundaySetting),'OFF');
 
 console.log('Pengujian inti, rotasi lintas tahun dan aturan Sabtu shift sore dan Minggu permanen lulus.');
+
+// Two sessions share a single progressive overtime calculation.
+const both=test('2026-11-23','S','work',[int('08:00','16:00'),int('01:00','03:00',1,1)]);
+approx(both.net,9);approx(both.amount,33121*(1.5+8*2));
+// After-shift overtime may run across midnight, without regular shift overlap.
+const overnight=test('2026-11-16','P','work',[int('16:00','05:00',0,1)]);
+approx(overnight.gross,13);approx(overnight.automaticBreak,1);approx(overnight.net,12);
+// Regular shift time must not accidentally become overtime.
+assert.throws(()=>test('2026-11-23','S','work',[int('16:00','05:00',0,1)]),/overlaps your scheduled shift/);
+console.log('v10 extra scenarios passed.');

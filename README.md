@@ -22,3 +22,22 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - The browser's native date/time pickers may use the device's regional formatting.
 - Currency remains IDR. This edition uses English number formatting.
 - Current report PDFs use the browser's Print / Save as PDF.
+
+
+## Mobile fit update (v9)
+- Larger touch targets, readable 16px inputs, and full-width layout on Android phones.
+- Respects safe-area insets and prevents horizontal overflow.
+- All business rules and calculations are unchanged.
+- The old installed PWA may need to be closed/reopened or its page refreshed after GitHub Pages deploys.
+- Make a JSON backup in Settings before any update. Do not uninstall or clear site data to refresh, since that can delete records.
+
+## v10 update
+- Automatic rotation of all 36 quotes; no manual arrows.
+- Before Shift / After Shift / Both / Rest Day / Custom selection.
+- Start/end time only; dates inferred for overnight overtime.
+- For afternoon shift, After Shift defaults to 01:00–03:00 on the next day.
+- Two overtime sessions share a single work-date calculation (first-hour premium applied once).
+- Guard: normal scheduled shift intervals cannot be included in weekday overtime.
+- Historical records and snapshots remain stored. Export JSON backup before updating.
+
+- One saved overtime entry per work date: edit it to add both sessions, so the first-hour multiplier is not accidentally applied twice.
