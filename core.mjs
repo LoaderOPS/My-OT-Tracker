@@ -48,6 +48,39 @@ const manual=Number(record.manualBreak||0);if(!Number.isFinite(manual)||manual<0
 const rate=Number(record.rateSnapshot??settings.hourly);if(!Number.isFinite(rate)||rate<0)throw Error('Invalid hourly rate');const type=record.dayType||'work';const multipliers=record.ruleSnapshot||{weekday:settings.weekday,rest:settings.rest,restThreshold:settings.restThreshold};const [first,sub]=multipliers.weekday;const [restA,restB,restC]=multipliers.rest;const threshold=Number(multipliers.restThreshold);const bands=[];let remaining=net;const band=(limit,m,label)=>{const qty=Math.min(remaining,limit);if(qty>1e-9){bands.push({label,hours:qty,multiplier:Number(m),amount:qty*Number(m)*rate});remaining-=qty}};
 if(type==='work'||type==='scheduled'){band(1,first,'First hour');band(Infinity,sub,'Subsequent hours')}else{band(threshold,restA,`Hours 1–${threshold}`);band(1,restB,`Hour ${threshold+1}`);band(Infinity,restC,`Hour ${threshold+2} onward`)}
 return {gross:gross/60,automaticBreak:breakDeduct/60,manualBreak:manual/60,breakHours:totalBreak/60,net,rate,dayType:type,breaks,bands,amount:bands.reduce((s,b)=>s+b.amount,0)} }
+// Explicit opt-in for new Before & After records. Historical records without
+// calculationMode retain their original combined method until intentionally edited.
+export function calculateBySession(record,settings){
+  if(record.calculationMode!=='separate' || (record.intervals||[]).length<2)
+    return calculate(record,settings);
+  // Validate the full set first: do not allow session overlaps or regular-shift overlap.
+  calculate({...record,manualBreak:0},settings);
+  const rate=Number(record.rateSnapshot??settings.hourly);
+  const inputManual=Number(record.manualBreak||0);
+  if(!Number.isFinite(inputManual)||inputManual<0)throw Error('Invalid manual break adjustment');
+  let manualLeft=inputManual;
+  let gross=0,automaticBreak=0,manualBreak=0,breakHours=0,net=0,amount=0;
+  const breaks=[],bands=[],sessions=[];
+  for(let i=0;i<record.intervals.length;i++){
+    const interval=record.intervals[i];
+    const preliminary=calculate({...record,intervals:[interval],manualBreak:0},settings);
+    // Deduct manual break time from the first session with payable time remaining,
+    // carrying any remaining deduction forward to the next session.
+    const applied=Math.min(manualLeft,preliminary.net*60);
+    manualLeft-=applied;
+    const result=calculate({...record,intervals:[interval],manualBreak:applied},settings);
+    const label=record.shift==='OFF'?`Session ${i+1}`:
+      (record.intervals.length===2?(i===0?'Before Shift':'After Shift'):`Session ${i+1}`);
+    sessions.push({label,interval,...result});
+    gross+=result.gross;automaticBreak+=result.automaticBreak;
+    manualBreak+=result.manualBreak;breakHours+=result.breakHours;
+    net+=result.net;amount+=result.amount;
+    breaks.push(...result.breaks.map(b=>({...b,session:label})));
+    bands.push(...result.bands.map(b=>({...b,label:`${label} · ${b.label}`})));
+  }
+  return {gross,automaticBreak,manualBreak,breakHours,net,amount,rate,
+    dayType:record.dayType||'work',breaks,bands,sessions,calculationMode:'separate'};
+}
 export function normalizeShift(v){const a=String(v??'').trim().toUpperCase();if(['P','PAGI','1','SHIFT 1','SHIFT PAGI','MORNING','08:00-16:00','08.00-16.00'].includes(a))return'P';if(['S','SORE','2','SHIFT 2','SHIFT SORE','AFTERNOON','16:00-00:00','16.00-00.00','16:00-24:00','16.00-24.00'].includes(a))return'S';if(['OFF','LIBUR','L','X','REST','HOLIDAY','CUTI','-'].includes(a))return'OFF';return null}
 export function parseCSV(text){let out=[],row=[],v='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(c==='"'){if(quoted&&text[i+1]==='"'){v+='"';i++}else quoted=!quoted}else if(!quoted&&(',;\t'.includes(c))){row.push(v);v=''}else if(!quoted&&(c==='\n'||c==='\r')){if(c==='\r'&&text[i+1]==='\n')i++;row.push(v);if(row.some(x=>x.trim()))out.push(row);row=[];v=''}else v+=c}row.push(v);if(row.some(x=>x.trim()))out.push(row);return out}
 export function parseDate(v){if(typeof v==='number'&&v>30000&&v<100000)return new Date(Date.UTC(1899,11,30)+v*86400000).toISOString().slice(0,10);let s=String(v??'').trim();if(/^\d{4}-\d\d-\d\d$/.test(s)){if(dateKey(localDate(s))===s)return s;return null}let m=s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);if(!m)return null;const d=`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}`;return dateKey(localDate(d))===d?d:null}

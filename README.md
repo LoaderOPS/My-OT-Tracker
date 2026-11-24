@@ -111,3 +111,13 @@ A mobile-first PWA for personal overtime tracking. All main interface labels, no
 - No edits to payroll, weekend classification logic, offline data format or cloud backup configuration.
 - To update: back up data via Settings > Download JSON backup, upload ALL files including `style-v18.css`, then check that the header says v18.
 - Firebase still requires manual project setup before automatic cloud backup works.
+
+
+## v19 — Separate Before & After calculations
+- New entries with multiple sessions calculate each session's first hour independently.
+- For 7 hours Before Shift and 2 hours After Shift at Rp33,121/h on a workday: Rp447,133.50 + Rp115,923.50 = Rp563,057.00.
+- Automatic breaks are deducted only when their time windows overlap an overtime session.
+- Additional manual break minutes are assigned to the earliest session with payable time, then the following sessions.
+- Old records without `calculationMode` continue using the original combined method; editing and saving a multi-session old record switches it to separate mode, with a confirmation if its payment changes.
+- Back up your data in Settings before replacing the app files. No IndexedDB schema migration is required.
+- Applies user-requested payroll/session policy; confirm its use with your employer's rules before relying on it as an entitlement calculation.
